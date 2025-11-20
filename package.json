@@ -2,9 +2,6 @@
     "name": "clinic-scout-web",
     "version": "0.1.0",
     "private": true,
-    "engines": {
-        "node": ">=18.0.0"
-    },
     "scripts": {
         "dev": "next dev",
         "build": "next build",
@@ -15,9 +12,9 @@
         "clsx": "^2.1.0",
         "firebase": "^10.8.0",
         "lucide-react": "^0.344.0",
-        "next": "14.1.0",
-        "react": "^18",
-        "react-dom": "^18"
+        "next": "15.0.3",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0"
     },
     "devDependencies": {
         "@types/node": "^20",
@@ -25,7 +22,7 @@
         "@types/react-dom": "^18",
         "autoprefixer": "^10.0.1",
         "eslint": "^8",
-        "eslint-config-next": "14.1.0",
+        "eslint-config-next": "15.0.3",
         "postcss": "^8",
         "tailwindcss": "^3.3.0",
         "typescript": "^5"
