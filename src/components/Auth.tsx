@@ -9,6 +9,7 @@ import clsx from "clsx";
 
 export default function Auth({ onLogin, paymentUrl, billingEmail }: { onLogin: (user: User) => void, paymentUrl: string, billingEmail?: string }) {
     const [phone, setPhone] = useState("");
+    const [email, setEmail] = useState("");
     const [step, setStep] = useState<"LOGIN" | "MEMBERSHIP" | "ACTIVE">("LOGIN");
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState<User | null>(null);
@@ -38,9 +39,10 @@ export default function Auth({ onLogin, paymentUrl, billingEmail }: { onLogin: (
             const userCredential = await signInAnonymously(auth);
             const user = userCredential.user;
 
-            // Save phone number to profile
+            // Save phone number and email to profile
             await setDoc(doc(db, "users", user.uid), {
                 phoneNumber: `+1${phone}`,
+                email: email,
                 createdAt: new Date(),
             }, { merge: true });
 
@@ -78,27 +80,44 @@ export default function Auth({ onLogin, paymentUrl, billingEmail }: { onLogin: (
                         </div>
 
                         <form onSubmit={handleLogin} className="space-y-6 max-w-sm mx-auto">
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-900 uppercase tracking-wider">Mobile Number</label>
-                                <div className="flex rounded-xl border border-slate-200 overflow-hidden focus-within:ring-4 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all shadow-sm bg-white">
-                                    <div className="bg-slate-50 px-4 py-4 border-r border-slate-200 text-slate-500 font-medium flex items-center gap-2">
-                                        <span>🇨🇦</span> +1
+                            <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold text-slate-900 uppercase tracking-wider">Mobile Number</label>
+                                    <div className="flex rounded-xl border border-slate-200 overflow-hidden focus-within:ring-4 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all shadow-sm bg-white">
+                                        <div className="bg-slate-50 px-4 py-4 border-r border-slate-200 text-slate-500 font-medium flex items-center gap-2">
+                                            <span>🇨🇦</span> +1
+                                        </div>
+                                        <input
+                                            type="tel"
+                                            required
+                                            pattern="[0-9]{10}"
+                                            placeholder="555 123 4567"
+                                            className="flex-1 px-4 py-4 outline-none text-slate-900 font-bold text-lg placeholder:text-slate-300 bg-transparent"
+                                            value={phone}
+                                            onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                                        />
                                     </div>
-                                    <input
-                                        type="tel"
-                                        required
-                                        pattern="[0-9]{10}"
-                                        placeholder="555 123 4567"
-                                        className="flex-1 px-4 py-4 outline-none text-slate-900 font-bold text-lg placeholder:text-slate-300 bg-transparent"
-                                        value={phone}
-                                        onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold text-slate-900 uppercase tracking-wider">Billing Email</label>
+                                    <div className="flex rounded-xl border border-slate-200 overflow-hidden focus-within:ring-4 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all shadow-sm bg-white">
+                                        <input
+                                            type="email"
+                                            required
+                                            placeholder="name@example.com"
+                                            className="flex-1 px-4 py-4 outline-none text-slate-900 font-bold text-lg placeholder:text-slate-300 bg-transparent"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                        />
+                                    </div>
+                                    <p className="text-[10px] text-slate-400">Used to verify your membership.</p>
                                 </div>
                             </div>
 
                             <button
                                 type="submit"
-                                disabled={loading || phone.length !== 10}
+                                disabled={loading || phone.length !== 10 || !email.includes('@')}
                                 className="group relative w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-5 rounded-xl shadow-xl shadow-blue-600/20 transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 overflow-hidden"
                             >
                                 <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer" />
@@ -135,7 +154,7 @@ export default function Auth({ onLogin, paymentUrl, billingEmail }: { onLogin: (
                         </a>
 
                         <p className="text-xs text-amber-700 bg-amber-50 p-3 rounded-lg border border-amber-100">
-                            <strong>⚠️ Important:</strong> Use <span className="font-bold underline">{billingEmail || "your billing email"}</span> on Ko-fi to activate instantly.
+                            <strong>⚠️ Important:</strong> Use <span className="font-bold underline">{email || billingEmail || "your billing email"}</span> on Ko-fi to activate instantly.
                         </p>
 
                         <button onClick={() => setStep("ACTIVE")} className="mt-6 text-sm text-slate-400 hover:text-slate-600 underline">

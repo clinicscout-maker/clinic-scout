@@ -77,7 +77,7 @@ def kofi_handler(request: Request):
 
     # Send SMS if Twilio is configured and user has a phone number
     user_data = user_doc.to_dict()
-    phone = user_data.get('phone')
+    phone = user_data.get('phoneNumber')
     if phone and TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN:
         try:
             client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
