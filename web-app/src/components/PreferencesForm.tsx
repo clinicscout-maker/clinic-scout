@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { User } from "firebase/auth";
-import { Save, Loader2, X, Check, Mail, ShieldCheck } from "lucide-react";
+import { Save, Loader2, X, Check } from "lucide-react";
 import clsx from "clsx";
 
 const PROVINCES = [
@@ -13,7 +13,7 @@ const PROVINCES = [
     { code: "AB", name: "Alberta" },
 ];
 
-const LOCATIONS: Record<string, string[]> = {
+const AREAS_BY_PROVINCE: Record<string, string[]> = {
     "ON": ["Toronto", "Mississauga", "Brampton", "Markham", "Richmond Hill", "Vaughan", "Oakville", "Scarborough", "North York", "Etobicoke"],
     "BC": ["Vancouver", "Burnaby", "Richmond", "Surrey", "North Vancouver", "West Vancouver", "Coquitlam", "Delta"],
     "AB": ["Calgary", "Edmonton", "Red Deer", "Lethbridge"],
@@ -25,8 +25,6 @@ export default function PreferencesForm({ user, onClose }: { user: User, onClose
     const [province, setProvince] = useState("ON");
     const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
     const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
-    const [email, setEmail] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
     const [loading, setLoading] = useState(false);
     const [saved, setSaved] = useState(false);
 
@@ -40,8 +38,6 @@ export default function PreferencesForm({ user, onClose }: { user: User, onClose
                 setProvince(data.province || "ON");
                 setSelectedAreas(data.areas || []);
                 setSelectedLanguages(data.languages || []);
-                setEmail(data.email || "");
-                setPhoneNumber(data.phoneNumber || "");
             }
         };
         fetchPreferences();
@@ -61,12 +57,6 @@ export default function PreferencesForm({ user, onClose }: { user: User, onClose
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        if (!email || !email.includes("@")) {
-            alert("Please enter a valid billing email.");
-            return;
-        }
-
         setLoading(true);
         setSaved(false);
         try {
@@ -74,7 +64,6 @@ export default function PreferencesForm({ user, onClose }: { user: User, onClose
                 province,
                 areas: selectedAreas,
                 languages: selectedLanguages,
-                email,
                 updatedAt: new Date()
             }, { merge: true });
             setSaved(true);
@@ -101,38 +90,6 @@ export default function PreferencesForm({ user, onClose }: { user: User, onClose
             <div>
                 <h3 className="font-bold text-slate-900 text-lg">Your Preferences</h3>
                 <p className="text-sm text-slate-500">Customize your alerts</p>
-            </div>
-
-            {/* Verified Identity */}
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Verified Identity</label>
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                        <ShieldCheck className="w-5 h-5 text-green-600" />
-                    </div>
-                    <div>
-                        <p className="font-bold text-slate-900">{phoneNumber || "No phone linked"}</p>
-                        <p className="text-xs text-green-600 font-bold flex items-center gap-1">
-                            <Check className="w-3 h-3" /> Verified
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            {/* Billing Email */}
-            <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Billing Email <span className="text-red-500">*</span></label>
-                <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                    <input
-                        type="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="For receipt & activation"
-                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none font-medium text-slate-900 placeholder:text-slate-400 transition-all"
-                    />
-                </div>
             </div>
 
             {/* Province Selector */}
@@ -166,7 +123,7 @@ export default function PreferencesForm({ user, onClose }: { user: User, onClose
                     Target Areas in {PROVINCES.find(p => p.code === province)?.name}
                 </label>
                 <div className="flex flex-wrap gap-2">
-                    {LOCATIONS[province]?.map((area) => (
+                    {AREAS_BY_PROVINCE[province]?.map((area) => (
                         <button
                             key={area}
                             type="button"

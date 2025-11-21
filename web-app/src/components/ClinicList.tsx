@@ -37,7 +37,7 @@ export default function ClinicList({ paymentUrl, isPremium = false }: { paymentU
     const [loading, setLoading] = useState(true);
     const [filterStatus, setFilterStatus] = useState<"ALL" | "OPEN" | "WAITLIST">("ALL");
     const [selectedProvince, setSelectedProvince] = useState("ALL");
-    const [locationFilter, setLocationFilter] = useState("ALL");
+    const [locationFilter, setLocationFilter] = useState("All");
     const [userVotes, setUserVotes] = useState<Record<string, 'success' | 'failure'>>({});
 
     useEffect(() => {
@@ -98,14 +98,13 @@ export default function ClinicList({ paymentUrl, isPremium = false }: { paymentU
 
         // Filter by Province
         if (selectedProvince !== "ALL") {
+            // Filter by checking if the clinic's district is in the selected province's list
             const provinceLocations = LOCATIONS[selectedProvince] || [];
-            // Check if clinic's district/city matches any in the province list
-            // Or if we have a province field (assuming we might not, so we use the list)
-            result = result.filter(c => provinceLocations.some(loc => c.district.includes(loc)));
+            result = result.filter(c => provinceLocations.includes(c.district));
         }
 
-        // Filter by Location
-        if (locationFilter !== "ALL") {
+        // Filter by Location (city)
+        if (locationFilter !== "All") {
             result = result.filter(c => c.district.includes(locationFilter));
         }
 
@@ -176,7 +175,7 @@ export default function ClinicList({ paymentUrl, isPremium = false }: { paymentU
                         value={selectedProvince}
                         onChange={(e) => {
                             setSelectedProvince(e.target.value);
-                            setLocationFilter("ALL"); // Reset location when province changes
+                            setLocationFilter("All"); // Reset location when province changes
                         }}
                         className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-medium text-slate-600"
                     >
@@ -193,7 +192,7 @@ export default function ClinicList({ paymentUrl, isPremium = false }: { paymentU
                         disabled={selectedProvince === "ALL"}
                         className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-medium text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        <option value="ALL">All Locations</option>
+                        <option value="All">All Locations</option>
                         {selectedProvince !== "ALL" && LOCATIONS[selectedProvince]?.map(location => (
                             <option key={location} value={location}>{location}</option>
                         ))}
@@ -289,6 +288,8 @@ export default function ClinicList({ paymentUrl, isPremium = false }: { paymentU
 
 function ClinicCard({ clinic, userVote, onVote }: { clinic: Clinic, userVote?: 'success' | 'failure', onVote: (type: 'success' | 'failure') => void }) {
     const [voting, setVoting] = useState(false);
+
+
     const handleVoteClick = async (type: 'success' | 'failure') => {
         if (voting || userVote) return;
         setVoting(true);

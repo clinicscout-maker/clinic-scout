@@ -4,22 +4,20 @@ import { useState, useEffect } from "react";
 import { auth, db } from "@/lib/firebase";
 import { signInAnonymously, onAuthStateChanged, User } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import { ArrowRight, ShieldCheck, Coffee, ExternalLink } from "lucide-react";
+import { Phone, ArrowRight, ShieldCheck, Coffee, ExternalLink } from "lucide-react";
 import clsx from "clsx";
 
-export default function Auth({ onLogin, paymentUrl, billingEmail }: { onLogin: (user: User) => void, paymentUrl: string, billingEmail?: string }) {
+export default function Auth({ onLogin, paymentUrl, isPremium = false }: { onLogin: (user: User) => void, paymentUrl: string, isPremium?: boolean }) {
     const [phone, setPhone] = useState("");
     const [step, setStep] = useState<"LOGIN" | "MEMBERSHIP" | "ACTIVE">("LOGIN");
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState<User | null>(null);
+    const [isWaitingForPayment, setIsWaitingForPayment] = useState(false);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             if (currentUser) {
                 setUser(currentUser);
-                // Check if premium (mock check for now, or read from Firestore)
-                // For now, we just move to MEMBERSHIP or ACTIVE based on flow
-                // If we are in LOGIN, move to MEMBERSHIP
                 if (step === "LOGIN") {
                     setStep("MEMBERSHIP");
                 }
@@ -28,6 +26,14 @@ export default function Auth({ onLogin, paymentUrl, billingEmail }: { onLogin: (
         });
         return () => unsubscribe();
     }, [onLogin, step]);
+
+    // Watch for premium status update from parent (page.tsx)
+    useEffect(() => {
+        if (isPremium && step === "MEMBERSHIP") {
+            setStep("ACTIVE");
+            setIsWaitingForPayment(false);
+        }
+    }, [isPremium, step]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -53,8 +59,27 @@ export default function Auth({ onLogin, paymentUrl, billingEmail }: { onLogin: (
         }
     };
 
-    const handleMembershipComplete = () => {
-        setStep("ACTIVE");
+    const handleMembershipClick = () => {
+        setIsWaitingForPayment(true);
+    };
+
+    const handleManualCheck = async () => {
+        if (!user) return;
+        setLoading(true);
+        try {
+            const docRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists() && docSnap.data().isPremium) {
+                setStep("ACTIVE");
+                setIsWaitingForPayment(false);
+            } else {
+                alert("Payment not found yet. It usually takes 10-30 seconds.");
+            }
+        } catch (error) {
+            console.error("Error checking payment:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -127,15 +152,37 @@ export default function Auth({ onLogin, paymentUrl, billingEmail }: { onLogin: (
                             href={paymentUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            onClick={handleMembershipComplete}
+                            onClick={handleMembershipClick}
                             className="block w-full bg-[#FF5E5B] hover:bg-[#ff4643] text-white font-bold py-4 rounded-xl shadow-xl shadow-[#FF5E5B]/20 transition-all hover:-translate-y-0.5 mb-4 flex items-center justify-center gap-2"
                         >
                             Join Membership on Ko-fi
                             <ExternalLink className="w-4 h-4" />
                         </a>
 
-                        <p className="text-xs text-amber-700 bg-amber-50 p-3 rounded-lg border border-amber-100">
-                            <strong>⚠️ Important:</strong> Use <span className="font-bold underline">{billingEmail || "your billing email"}</span> on Ko-fi to activate instantly.
+                        {isWaitingForPayment && (
+                            <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-6 animate-fade-in">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <span className="relative flex h-3 w-3">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                                    </span>
+                                    <p className="text-sm font-bold text-blue-900">Listening for payment confirmation...</p>
+                                </div>
+                                <p className="text-xs text-blue-700 mb-3 leading-relaxed">
+                                    This usually takes 10-30 seconds after you complete payment on Ko-fi.
+                                </p>
+                                <button
+                                    onClick={handleManualCheck}
+                                    disabled={loading}
+                                    className="w-full bg-white border border-blue-200 text-blue-700 text-xs font-bold py-2 rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-50"
+                                >
+                                    {loading ? "Checking..." : "I've Paid (Check Now)"}
+                                </button>
+                            </div>
+                        )}
+
+                        <p className="text-xs text-slate-400 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <strong>Important:</strong> Please use the SAME phone number as your login so we can link your account automatically.
                         </p>
 
                         <button onClick={() => setStep("ACTIVE")} className="mt-6 text-sm text-slate-400 hover:text-slate-600 underline">

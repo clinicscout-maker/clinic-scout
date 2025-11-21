@@ -7,7 +7,7 @@ import { db } from "@/lib/firebase";
 import Auth from "@/components/Auth";
 import ClinicList from "@/components/ClinicList";
 import PreferencesForm from "@/components/PreferencesForm";
-import { Zap, Activity, Settings, MapPin, Clock } from "lucide-react";
+import { CheckCircle2, Zap, Activity, ArrowRight, Settings, MapPin } from "lucide-react";
 
 const KOFI_LINK = "https://ko-fi.com/clinicscout/tiers";
 
@@ -100,7 +100,7 @@ export default function Home() {
 
                         {/* Registration / Auth Card */}
                         <div className="relative z-10">
-                            <Auth onLogin={setUser} paymentUrl={paymentUrl} billingEmail={userData?.email} />
+                            <Auth onLogin={setUser} paymentUrl={paymentUrl} isPremium={isPremium} />
                         </div>
 
                         {/* My Preferences Card (Logged In) */}
@@ -185,8 +185,7 @@ export default function Home() {
                                     </span>
                                 </h2>
                                 <div className="hidden md:flex items-center gap-2 text-xs font-medium text-slate-500">
-                                    <Clock className="w-3 h-3" />
-                                    Last checked 2m ago
+                                    Last checked: Just now
                                 </div>
                             </div>
                             <ClinicList paymentUrl={paymentUrl} isPremium={isPremium} />

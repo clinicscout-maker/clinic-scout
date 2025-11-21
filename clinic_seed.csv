@@ -1,0 +1,256 @@
+id,name,url,city,province
+appletree_new_patient,Appletree Medical Group,https://appletreemedicalgroup.com/patients/register-new-patient/,Ontario Wide,ON
+mci_doctors_office,MCI The Doctor's Office,https://mci-doctorsoffice.ca/accepting-new-patients/,Ontario Wide,ON
+well_health_clinics,WELL Health Medical Centres,https://wellclinics.ca/accepting-new-patients/,Ontario Wide,ON
+md_connected,MD Connected,https://www.mdconnected.ca/family-practice/,Ontario Wide,ON
+cloud_care_clinics,Cloud Care Clinics,https://cloudcareclinics.ca/new-online-booking/,Toronto,ON
+good_doctors,Good Doctors Medical,https://gooddoctors.ca/site/register-new-patient/,Ontario Wide,ON
+magenta_health,Magenta Health,https://www.magentahealth.ca/new-patients,Toronto,ON
+albany_medical,Albany Medical Clinic,https://www.albanyclinic.ca/new-patient-registration/registration-form/,Toronto,ON
+infinity_health,Infinity Health Centre,https://infinityhealthcentre.com/new-patients,Toronto,ON
+integra_health,Integra Health Centre,https://www.integrahealth.ca/contact-us,Toronto,ON
+taddle_creek_fht,Taddle Creek FHT,https://taddlecreekfht.ca/about-us/becoming-a-patient/,Toronto,ON
+st_michaels_fht,St. Michael's Academic FHT,https://unityhealth.to/areas-of-care/programs-and-clinics/family-and-community-medicine/,Toronto,ON
+tw_fht_bathurst,Toronto Western FHT (Bathurst),https://www.twfht.ca/displayPage.php?page=LookingForAPhysician,Toronto,ON
+village_fht,Village Family Health Team,https://villagefht.ca/new-patients/,Toronto,ON
+citrus_medical,Citrus Medical Centre,https://www.citrusmedical.ca/register,Toronto,ON
+corktown_medical,Corktown Medical Centre,https://corktownmedical.com/new-patients/,Toronto,ON
+healthsource_medical,HealthSource Medical,https://hsmedical.ca/new-patients/,Toronto,ON
+grace_medical,Grace Medical,https://www.gracemedicalclinic.ca/register,Toronto,ON
+bloor_medical,Bloor Medical Clinic,https://bloormedical.ca/new-patients/,Toronto,ON
+harbourfront_medical,Harbourfront Medical,https://hmedical.ca/new-family-doctor,Toronto,ON
+queens_quay_medical,Queen's Quay Medical,https://queensquaymedical.com/registration/,Toronto,ON
+spadina_health,Spadina Health Centre,https://spadinahealth.ca/register/,Toronto,ON
+college_care_medical,College Care Medical,https://collegecaremedical.ca/register/,Toronto,ON
+yonge_eglinton_medical,Yonge Eglinton Medical,https://yemc.ca/new-patients/,Toronto,ON
+davisville_family,Davisville Family Practice,https://davisvillefamilypractice.com/new-patients/,Toronto,ON
+midtown_health,Midtown Health & Wellness,https://midtownhealthwellness.com/register/,Toronto,ON
+etobicoke_medical,Etobicoke Medical Centre FHT,https://etobicokemedical.ca/new-patients/,Etobicoke,ON
+humber_river_fht,Humber River FHT,https://hrfht.com/new-patients/,Etobicoke,ON
+kingsway_health,Kingsway Health,https://kingswayhealth.ca/register/,Etobicoke,ON
+lakeshore_village,Lakeshore Village Medical,https://lakeshorevillagemedical.ca/new-patients/,Etobicoke,ON
+stonegate_chc,Stonegate CHC,https://stonegatechc.org/programs-services/primary-health-care/,Etobicoke,ON
+westway_medical,Westway Medical Clinic,https://westwaymedical.ca/register/,Etobicoke,ON
+rexdale_doctors,Rexdale Doctors Clinic,https://rexdaledoctors.com/new-patients/,Etobicoke,ON
+olive_md,OliveMD Medical Centre,https://olivemd.ca/register/,Etobicoke,ON
+mimico_medical,Mimico Medical,https://mimicomedical.com/new-patients/,Etobicoke,ON
+royal_york_medical,Royal York Medical,https://royalyorkmedical.ca/register/,Etobicoke,ON
+north_york_fht,North York Family Health Team,https://nyfht.com/new-patients/,North York,ON
+don_mills_fht,Don Mills Family Health Team,https://donmillshealth.com/new-patients/,North York,ON
+jane_finch_fht,Jane-Finch FHT,https://janefinchfht.ca/programs/primary-care/,North York,ON
+polyclinic_family,Polyclinic Family Medicine,https://polyclinic.ca/family-practice-registration/,North York,ON
+northtown_medical,Northtown Medical,https://northtownmedical.ca/register/,North York,ON
+fairlawn_medical,Fairlawn Medical Centre,https://fairlawnmedical.ca/new-patients/,North York,ON
+keele_finch_clinic,Keele & Finch Medical,https://keelefinchclinic.ca/register/,North York,ON
+bathurst_bloor,Bathurst Bloor Clinic,https://bathurstbloor.ca/register/,North York,ON
+york_lanes,York Lanes Medical,https://yorklanesmedical.ca/new-patients/,North York,ON
+sheppard_medical,Sheppard Medical Centre,https://sheppardmedical.ca/register/,North York,ON
+bayview_medical,Bayview Medical Centre,https://bayviewmedical.ca/new-patients/,North York,ON
+lawrence_park_medical,Lawrence Park Medical,https://lawrenceparkmedical.ca/register/,North York,ON
+malvern_medical,Malvern Medical Centre,https://www.malvernmedical.ca/new-patient-registration,Scarborough,ON
+scarborough_fht,Scarborough Family Health Team,https://www.scarboroughfht.ca/new-patients,Scarborough,ON
+golden_mile_clinic,Golden Mile Medical,https://goldenmileclinic.ca/register/,Scarborough,ON
+kingston_markham,Kingston Markham Medical,https://kmmc.ca/register/,Scarborough,ON
+taibu_chc,TAIBU CHC,https://taibuchc.ca/en/primary-health-care/,Scarborough,ON
+west_hill_medical,West Hill Medical,https://westhillmedical.ca/register/,Scarborough,ON
+morningside_medical,Morningside Medical,https://morningsidemedical.ca/new-patients/,Scarborough,ON
+cedarbrae_medical,Cedarbrae Medical,https://cedarbraemedical.ca/register/,Scarborough,ON
+agincourt_medical,Agincourt Medical,https://agincourtmedical.ca/new-patients/,Scarborough,ON
+rouge_valley_fht,Rouge Valley FHT,https://rougevalleyfht.ca/new-patients/,Scarborough,ON
+markham_fht,Markham Family Health Team,https://markhamfht.com/new-patients/,Markham,ON
+health_for_all,Health For All FHT,https://healthforallfht.ca/new-patients/,Markham,ON
+carefirst_fht,Carefirst FHT,https://carefirstfht.ca/new-patients/,Richmond Hill,ON
+vaughan_chc,Vaughan CHC,https://vaughanchc.com/primary-care/becoming-a-client/,Vaughan,ON
+astra_medical,Astra Medical,https://astramedical.ca/register/,Richmond Hill,ON
+atlas_medical,Atlas Medical,https://atlasmedical.ca/new-patients/,Richmond Hill,ON
+elgin_mills,Elgin Mills Medical,https://elginmillsmedical.ca/register/,Richmond Hill,ON
+forest_walkin,Forest Medical,https://forestwalkin.ca/register/,Richmond Hill,ON
+gemcare_clinic,GEMCare Clinic,https://gemcare.ca/new-patients/,Richmond Hill,ON
+health_nexus,Health Nexus,https://healthnexus.ca/register/,Thornhill,ON
+cornell_medical,Cornell Medical Centre,https://cornellmedical.ca/new-patients/,Markham,ON
+boxgrove_medical,Boxgrove Medical,https://boxgrovemedical.ca/register/,Markham,ON
+unionville_medical,Unionville Medical,https://unionvillemedical.ca/new-patients/,Markham,ON
+maple_medical,Maple Medical Centre,https://maplemedical.ca/register/,Vaughan,ON
+woodbridge_medical,Woodbridge Medical,https://woodbridgemedical.ca/new-patients/,Vaughan,ON
+kleinburg_medical,Kleinburg Medical,https://kleinburgmedical.ca/register/,Vaughan,ON
+credit_valley_fht,Credit Valley FHT,https://cvfht.ca/new-patients/,Mississauga,ON
+summerville_fht,Summerville FHT,https://summervillefht.com/displayPage.php?page=NewPatients,Mississauga,ON
+central_brampton_fht,Central Brampton FHT,https://cbfht.ca/new-patients/,Brampton,ON
+queen_square_fht,Queen Square FHT,https://queensquarefht.ca/new-patients/,Brampton,ON
+north_peel_fht,North Peel FHT,https://northpeelfht.com/new-patients/,Brampton,ON
+oakmed_fht,OakMed Family Health Team,https://oakmed.ca/new-patients/,Oakville,ON
+one_health_oakville,One Health Oakville,https://onehealthoakville.com/book-appointment/,Oakville,ON
+prime_care_fht,Prime Care FHT,https://primecarefht.ca/new-patients/,Milton,ON
+halton_hills_fht,Halton Hills FHT,https://haltonhillsfht.com/new-patients/,Georgetown,ON
+mississauga_medical,Mississauga Medical Arts,https://mississaugamedical.ca/register/,Mississauga,ON
+square_one_health,Square One Health,https://squareonehealth.ca/new-patients/,Mississauga,ON
+hurontario_medical,Hurontario Medical,https://hurontariomedical.ca/register/,Mississauga,ON
+bramalea_medical,Bramalea Medical,https://bramaleamedical.ca/new-patients/,Brampton,ON
+chinguacousy_medical,Chinguacousy Medical,https://chinguacousymedical.ca/register/,Brampton,ON
+dundas_medical,Dundas Medical Oakville,https://dundasmedical.ca/new-patients/,Oakville,ON
+trafalgar_medical,Trafalgar Medical,https://trafalgarmedical.ca/register/,Oakville,ON
+burloak_medical,Burloak Medical,https://burloakmedical.ca/new-patients/,Burlington,ON
+brant_medical,Brant Medical,https://brantmedical.ca/register/,Burlington,ON
+west_durham_fht,West Durham FHT,https://westdurhamfht.com/new-patients/,Pickering,ON
+ajax_pickering_medical,Ajax Pickering Medical,https://apmedical.ca/register/,Ajax,ON
+whitby_medical,Whitby Medical Centre,https://whitbymedical.ca/new-patients/,Whitby,ON
+oshawa_clinic,The Oshawa Clinic,https://oshawaclinic.com/new-patients/,Oshawa,ON
+courtice_health,Courtice Health Centre,https://courticehealth.ca/register/,Courtice,ON
+bowmanville_medical,Bowmanville Medical,https://bowmanvillemedical.ca/new-patients/,Bowmanville,ON
+brooklin_medical,Brooklin Medical,https://brooklinmedical.ca/register/,Whitby,ON
+taunton_medical,Taunton Medical,https://tauntonmedical.ca/new-patients/,Oshawa,ON
+harwood_medical,Harwood Medical,https://harwoodmedical.ca/register/,Ajax,ON
+liverpool_medical,Liverpool Medical,https://liverpoolmedical.ca/new-patients/,Pickering,ON
+kindercare_peds,Kindercare Pediatrics,https://kindercare.ca/referrals/,Toronto,ON
+kid_e_care,Kid E Care,https://kidecare.ca/book-online/,Toronto,ON
+bloor_kids,Bloor Kids,https://bloorkids.com/register/,Toronto,ON
+danforth_peds,Danforth Pediatrics,https://danforthpeds.ca/new-patients/,Toronto,ON
+uptown_peds,Uptown Pediatrics,https://uptownpeds.ca/register/,Toronto,ON
+upcc_city_centre,City Centre UPCC,https://www.vch.ca/en/location/vancouver-city-centre-urgent-primary-care-centre,Vancouver,BC
+upcc_reach,REACH UPCC,https://www.reachcentre.bc.ca/urgent-and-primary-care-centre,Vancouver,BC
+upcc_northeast,Northeast UPCC,https://www.vch.ca/en/location/northeast-urgent-and-primary-care-centre,Vancouver,BC
+upcc_southeast,Southeast UPCC,https://www.vch.ca/en/location/southeast-urgent-and-primary-care-centre,Vancouver,BC
+upcc_north_van,North Vancouver UPCC,https://www.vch.ca/en/location/north-vancouver-urgent-and-primary-care-centre,North Vancouver,BC
+upcc_richmond,Richmond City Centre UPCC,https://www.vch.ca/en/location/richmond-city-centre-urgent-and-primary-care-centre,Richmond,BC
+upcc_edmonds,Edmonds UPCC,https://www.fraserhealth.ca/Service-Directory/Locations/Burnaby/edmonds-urgent-and-primary-care-centre,Burnaby,BC
+upcc_metrotown,Metrotown UPCC,https://www.fraserhealth.ca/Service-Directory/Locations/Burnaby/metrotown-urgent-and-primary-care-centre,Burnaby,BC
+upcc_surrey_whalley,Whalley UPCC,https://www.fraserhealth.ca/Service-Directory/Locations/Surrey/whalley-urgent-and-primary-care-centre,Surrey,BC
+upcc_newton,Newton UPCC,https://www.fraserhealth.ca/Service-Directory/Locations/Surrey/newton-urgent-and-primary-care-centre,Surrey,BC
+well_cambie,WELL Health - Cambie,https://wellclinics.ca/british-columbia/richmond/,Richmond,BC
+well_richmond_central,WELL Health - Richmond Central,https://wellclinics.ca/british-columbia/richmond/,Richmond,BC
+well_kingsway,WELL Health - Kingsway,https://wellclinics.ca/british-columbia/vancouver/,Vancouver,BC
+well_fraser_st,WELL Health - Fraser St,https://wellclinics.ca/british-columbia/vancouver/,Vancouver,BC
+well_point_grey,WELL Health - Point Grey,https://wellclinics.ca/british-columbia/vancouver/,Vancouver,BC
+well_lonsdale,WELL Health - Lonsdale,https://wellclinics.ca/british-columbia/north-vancouver/,North Vancouver,BC
+well_burnaby,WELL Health - Burnaby,https://wellclinics.ca/british-columbia/burnaby/,Burnaby,BC
+well_surrey,WELL Health - Surrey,https://wellclinics.ca/british-columbia/surrey/,Surrey,BC
+well_coquitlam,WELL Health - Coquitlam,https://wellclinics.ca/british-columbia/coquitlam/,Coquitlam,BC
+well_white_rock,WELL Health - White Rock,https://wellclinics.ca/british-columbia/white-rock/,White Rock,BC
+coal_harbour_medical,Coal Harbour Medical,https://www.coalharbourmedical.com/new-patients,Vancouver,BC
+yale_medical,Yale Medical Centre,https://yalemedical.ca/,Vancouver,BC
+granville_medical,Granville Medical Clinic,https://granvillemedical.ca/,Vancouver,BC
+olympic_village_medical,Olympic Village Medical,https://ovmedical.ca/,Vancouver,BC
+crossroads_clinics,Crossroads Clinics,https://crossroadsclinics.com/,Vancouver,BC
+false_creek_medical,False Creek Medical,https://falsecreekmedical.com/,Vancouver,BC
+davie_village_medical,Davie Village Medical,https://davievillagemedical.com/,Vancouver,BC
+spectrum_health,Spectrum Health,https://spectrumhealth.net/,Vancouver,BC
+three_bridges_chc,Three Bridges CHC,https://www.vch.ca/en/location/three-bridges-community-health-centre,Vancouver,BC
+raven_song_chc,Raven Song CHC,https://www.vch.ca/en/location/raven-song-community-health-centre,Vancouver,BC
+pacific_spirit_chc,Pacific Spirit CHC,https://www.vch.ca/en/location/pacific-spirit-community-health-centre,Vancouver,BC
+south_van_chc,South Vancouver CHC,https://www.vch.ca/en/location/south-vancouver-community-health-centre,Vancouver,BC
+mid_main_chc,Mid-Main CHC,https://midmain.net/,Vancouver,BC
+main_medical,Main Street Medical,https://mainstreetmedical.ca/,Vancouver,BC
+commercial_drive_medical,Commercial Drive Doctors,https://commercialdrivedoctors.ca/,Vancouver,BC
+hastings_medical,Hastings Medical,https://hastingsmedical.com/,Vancouver,BC
+kerrisdale_medical,Kerrisdale Medical,https://kerrisdalemedical.com/,Vancouver,BC
+dunbar_medical,Dunbar Medical,https://dunbarmedical.com/,Vancouver,BC
+ubc_student_health,UBC Student Health,https://students.ubc.ca/health/student-health-service,Vancouver,BC
+university_village_medical,University Village Medical,https://universityvillagemedical.com/,Vancouver,BC
+kensington_medical,Kensington Medical Clinic,https://www.kensingtonmedicalclinic.com/,Burnaby,BC
+brentwood_medical,Brentwood Medical,https://brentwoodmedical.ca/,Burnaby,BC
+burnaby_medical,Burnaby Medical Centre,https://burnabymedicalcentre.com/,Burnaby,BC
+highgate_medical,Highgate Medical,https://highgatemedical.ca/,Burnaby,BC
+metrotown_medical,Metrotown Medical,https://metrotownmedical.ca/,Burnaby,BC
+edmonds_medical,Edmonds Medical,https://edmondsmedical.ca/,Burnaby,BC
+prime_care_burnaby,PrimeCare Medical,https://primecaremedical.ca/,Burnaby,BC
+royal_city_medical,Royal City Medical,https://royalcitymedical.ca/,New Westminster,BC
+columbia_medical,Columbia Square Medical,https://columbiasquaremedical.ca/,New Westminster,BC
+uptown_medical_new_west,Uptown Medical,https://uptownmedical.ca/,New Westminster,BC
+richmond_medical,Richmond Medical,https://richmondmedical.ca/,Richmond,BC
+terra_nova_medical,Terra Nova Medical,https://terranovamedical.ca/,Richmond,BC
+steveston_medical,Steveston Medical,https://stevestonmedical.ca/,Richmond,BC
+ironwood_medical,Ironwood Medical,https://ironwoodmedical.ca/,Richmond,BC
+lansdowne_medical,Lansdowne Medical,https://lansdownemedical.ca/,Richmond,BC
+garden_city_medical,Garden City Medical,https://gardencitymedical.ca/,Richmond,BC
+blundell_medical,Blundell Medical,https://blundellmedical.ca/,Richmond,BC
+aberdeen_medical,Aberdeen Medical,https://aberdeenmedical.ca/,Richmond,BC
+lonsdale_19th,Lonsdale & 19th Medical,https://pathwaysmedicalcare.ca/clinic/lonsdale-and-19th-medical-clinic/,North Vancouver,BC
+lynn_valley_medical,Lynn Valley Medical,https://lynnvalleymedical.com/,North Vancouver,BC
+parkgate_medical,Parkgate Medical,https://parkgatemedical.ca/,North Vancouver,BC
+capilano_medical,Capilano Medical,https://capilanomedical.ca/,North Vancouver,BC
+edgemont_medical,Edgemont Medical,https://edgemontmedical.ca/,North Vancouver,BC
+west_van_medical,West Vancouver Medical,https://westvanmedical.ca/,West Vancouver,BC
+ambleside_medical,Ambleside Medical,https://amblesidemedical.ca/,West Vancouver,BC
+dundarave_medical,Dundarave Medical,https://dundaravemedical.ca/,West Vancouver,BC
+park_royal_medical,Park Royal Medical,https://parkroyalmedical.ca/,West Vancouver,BC
+surrey_medical,Surrey Medical,https://surreymedical.ca/,Surrey,BC
+guildford_medical,Guildford Medical,https://guildfordmedical.ca/,Surrey,BC
+fleetwood_medical,Fleetwood Medical,https://fleetwoodmedical.ca/,Surrey,BC
+newton_medical,Newton Medical,https://newtonmedical.ca/,Surrey,BC
+cloverdale_medical,Cloverdale Medical,https://cloverdalemedical.ca/,Surrey,BC
+south_surrey_medical,South Surrey Medical,https://southsurreymedical.ca/,Surrey,BC
+delta_medical,Delta Medical,https://deltamedical.ca/,Delta,BC
+ladner_medical,Ladner Medical,https://ladnermedical.ca/,Delta,BC
+tsawwassen_medical,Tsawwassen Medical,https://tsawwassenmedical.ca/,Delta,BC
+nordel_medical,Nordel Medical,https://nordelmedical.ca/,Delta,BC
+primacy_grandview,Primacy - Grandview,https://primacy.ca/locations/grandview/,Vancouver,BC
+primacy_marine_drive,Primacy - Marine Drive,https://primacy.ca/locations/marine-drive/,Vancouver,BC
+primacy_rupert,Primacy - Rupert,https://primacy.ca/locations/rupert/,Vancouver,BC
+primacy_metrotown,Primacy - Metrotown,https://primacy.ca/locations/metrotown/,Burnaby,BC
+primacy_richmond,Primacy - Richmond,https://primacy.ca/locations/richmond/,Richmond,BC
+primacy_north_van,Primacy - North Vancouver,https://primacy.ca/locations/north-vancouver/,North Vancouver,BC
+primacy_surrey,Primacy - Surrey,https://primacy.ca/locations/surrey/,Surrey,BC
+primacy_coquitlam,Primacy - Coquitlam,https://primacy.ca/locations/coquitlam/,Coquitlam,BC
+primacy_langley,Primacy - Langley,https://primacy.ca/locations/langley/,Langley,BC
+primacy_delta,Primacy - Delta,https://primacy.ca/locations/delta/,Delta,BC
+pinnacle_crowfoot,Pinnacle Medical - Crowfoot,https://www.pinnaclemedicalcentres.com/locations/crowfoot,Calgary (NW),AB
+pinnacle_douglas_glen,Pinnacle Medical - Douglas Glen,https://www.pinnaclemedicalcentres.com/locations/douglas-glen,Calgary (SE),AB
+pinnacle_high_river,Pinnacle Medical - High River,https://www.pinnaclemedicalcentres.com/locations/high-river,High River,AB
+pinnacle_okotoks,Pinnacle Medical - Okotoks,https://www.pinnaclemedicalcentres.com/locations/okotoks,Okotoks,AB
+pinnacle_strathmore,Pinnacle Medical - Strathmore,https://www.pinnaclemedicalcentres.com/locations/strathmore,Strathmore,AB
+pinnacle_beddington,Pinnacle Medical - Beddington,https://www.pinnaclemedicalcentres.com/locations/beddington,Calgary (NW),AB
+pinnacle_walden,Pinnacle Medical - Walden,https://www.pinnaclemedicalcentres.com/locations/walden,Calgary (SE),AB
+aspen_medical,Aspen Medical Clinic,https://aspenmedicalclinic.ca/,Calgary (SW),AB
+aspire_medical,Aspire Medical,https://www.aspiremedical.ca/,Calgary (NW),AB
+bowglen_medical,Bowglen Medical Centre,https://bowglenmedical.ca/,Calgary (NW),AB
+centre_street_medical,Centre Street North Medical,https://cfpcn.ca/clinic/centre-street-north-medical-clinic/,Calgary (NW),AB
+creekside_medical,Creekside Medical Clinic,https://creeksidemedical.ca/,Calgary (NW),AB
+dalbrent_medical,Dalbrent Medical Centre,https://dalbrentmedical.ca/,Calgary (NW),AB
+edgemont_medical,Edgemont Medical Centre,https://edgemontmedical.ca/,Calgary (NW),AB
+evanston_medical,Evanston Medical Clinic,https://evanstonmedical.ca/,Calgary (NW),AB
+foothills_primary_care,Foothills Primary Care,https://www.foothillspc.ca/,Calgary (NW),AB
+varsity_medical,Varsity Medical Clinic,https://varsitymedical.ca/,Calgary (NW),AB
+crowfoot_village,Crowfoot Village Family Practice,https://crowfootvillagefamilypractice.com/,Calgary (NW),AB
+4th_street_clinic,4th Street Clinic,https://cwcpcn.com/clinic/4th-street-clinic/,Calgary (SW),AB
+advanced_primary_care,Advanced Primary Care,https://advancedprimarycare.ca/,Calgary (NE),AB
+alpha_glen_medical,Alpha Glen Medical Clinic,https://alphaglenmedical.ca/,Calgary (SE),AB
+associate_clinic,Associate Clinic,https://www.associateclinic.com/,Calgary (Downtown),AB
+avenue_health,Avenue Health,https://avenuehealth.ca/,Calgary (SW),AB
+bow_trail_medical,Bow Trail Medical Clinic,https://bowtrailmedical.ca/,Calgary (SW),AB
+calgary_west_medical,Calgary West Medical Centre,https://calgarywestmedical.com/,Calgary (SW),AB
+carewell_coach_hill,Carewell Medical (Coach Hill),https://carewellmedical.ca/,Calgary (SW),AB
+chinook_medical,Chinook Medical Centre,https://chinookmedical.ca/,Calgary (SW),AB
+richmond_square_medical,Richmond Square Medical,https://rsmed.ca/,Calgary (SW),AB
+west_springs_medical,West Springs Medical,https://westspringsmedical.ca/,Calgary (SW),AB
+connaught_medical,Connaught Medical Clinic,https://connaughtmedical.ca/,Calgary (Beltline),AB
+17_ave_medical,17 Ave SE Medical Centre,https://mosaicpcn.ca/clinic/17-ave-se-medical-centre/,Calgary (SE),AB
+abbeydale_medical,Abbeydale Medical Clinic,https://abbeydalemedical.ca/,Calgary (NE),AB
+affinity_medical,Affinity Medical Clinic,https://affinitymedical.ca/,Calgary (NW),AB
+calgary_childrens,Calgary Children's Clinic,https://calgarychildrensclinic.ca/,Calgary (NE),AB
+east_hills_medical,East Hills Family Medical,https://easthillsmedical.ca/,Calgary (SE),AB
+family_care_medical,Family Care Medical Center,https://familycaremedical.ca/,Calgary (NE),AB
+forest_lawn_medical,Forest Lawn Medical Clinic,https://forestlawnmedical.ca/,Calgary (SE),AB
+genesis_medical,Genesis Medical Clinic,https://genesismedical.ca/,Calgary (NE),AB
+marlborough_medical,Marlborough Medical Clinic,https://marlboroughmedical.ca/,Calgary (NE),AB
+martindale_medical,Martindale Medical Clinic,https://martindalemedical.ca/,Calgary (NE),AB
+mayland_medical,Mayland Medical Centre,https://maylandmedical.ca/,Calgary (NE),AB
+medilink_walkin,Medilink Walk-In,https://medilink.ca/,Calgary (SE),AB
+mosaic_sunridge,Mosaic Sunridge Mall Clinic,https://mosaicpcn.ca/mosaic-pcn/mosaic-clinics/,Calgary (NE),AB
+oasis_medical,Oasis Medical Centre,https://oasismedical.ca/,Calgary (NE),AB
+smart_clinic,Smart Clinic,https://smartclinic.ca/,Calgary (N),AB
+sunridge_teaching,Sunridge Family Medicine Teaching,https://cumming.ucalgary.ca/departments/family-medicine/sunridge,Calgary (NE),AB
+westwinds_medical,Westwinds Medical Clinic,https://westwindsmedical.ca/,Calgary (NE),AB
+now_medical,Now Medical Clinic,https://nowmedical.ca/accepting-new-patients,Calgary (NE),AB
+myhealth_clinic,MyHealth Clinic (Bowness),https://www.myhealthclinic.ca/,Calgary (NW),AB
+imagine_health,Imagine Health Centres,https://imaginehealthcentres.ca/calgary-clinics/,Calgary (South),AB
+oasis_medical_bridgeland,Oasis Medical (Bridgeland),https://oasismedical.ca/,Calgary (NE),AB
+mission_medical,Mission Medical Clinic,https://missionmedical.ca/,Calgary (SW),AB
+sage_hill_medical,Sage Hill Medical,https://sagehillmedical.ca/,Calgary (NW),AB
+beacon_hill_medical,Beacon Hill Medical,https://beaconhillmedical.ca/,Calgary (NW),AB
+harvest_hills_medical,Harvest Hills Medical,https://harvesthillsmedical.ca/,Calgary (N),AB
+medicentres_calgary,Medicentres (Multiple),https://www.medicentres.com/clinics/calgary/,Calgary,AB
+primary_plus_medical,Primary Plus Medical,https://primaryplusmedical.ca/,Calgary (NE),AB
+calgary_well_woman,Calgary Well Woman Clinic,https://cwcpcn.com/clinic/calgary-well-woman-clinic/,Calgary (SE),AB
+calgary_foot_care,Calgary Foot Care Nurses,https://calgaryfootcare.ca/,Calgary (SW),AB
+breast_cancer_supportive,Breast Cancer Supportive Care,https://breastcancersupportivecare.com/,Calgary (SW),AB
+pediatric_care_calgary,Pediatric Care Calgary,https://pediatriccarecalgary.ca/,Calgary (SW),AB
