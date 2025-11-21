@@ -11,16 +11,25 @@ import os
 import json
 from flask import Request, jsonify
 import functions_framework
+import firebase_admin
 from firebase_admin import credentials, firestore, initialize_app
 from twilio.rest import Client
 
-# Initialize Firebase Admin SDK (uses Application Default Credentials in GCF)
-try:
-    initialize_app()
-except Exception:
-    # Fallback for local testing – use serviceAccountKey.json
-    cred = credentials.Certificate('serviceAccountKey.json')
-    initialize_app(cred)
+# Initialize Firebase Admin SDK
+# In Cloud Functions, this uses Application Default Credentials automatically
+if not firebase_admin._apps:
+    try:
+        # Try ADC first (works in Cloud Functions)
+        initialize_app()
+    except Exception as e:
+        # Fallback for local testing with service account key
+        try:
+            cred = credentials.Certificate('serviceAccountKey.json')
+            initialize_app(cred)
+        except Exception:
+            # If both fail, let it fail - we need Firebase
+            print(f"Failed to initialize Firebase: {e}")
+            raise
 
 db = firestore.client()
 
@@ -53,6 +62,14 @@ def kofi_handler(request: Request):
         return jsonify({'error': 'Invalid verification token'}), 403
 
     email = data.get('email')
+    if not email:
+        return jsonify({'error': 'Missing email'}), 400
+        
+    # Sanitize email
+    email = email.lower().strip()
+    
+    print(f"🔍 Searching for user with email: {email}")
+
     amount = data.get('amount')
     timestamp = data.get('timestamp')
     is_subscription = data.get('is_subscription_payment', False)
@@ -66,7 +83,25 @@ def kofi_handler(request: Request):
         return jsonify({'status': 'success', 'message': 'User not found'}), 200
 
     user_doc = docs[0]
-    user_ref = users_ref.document(user_doc.id)
+    user_id = user_doc.id
+    user_ref = users_ref.document(user_id)
+    
+    # Log transaction to Firestore BEFORE updating user
+    try:
+        db.collection('transactions').add({
+            'userId': user_id,
+            'email': email,
+            'amount': amount,
+            'timestamp': timestamp,
+            'isSubscription': is_subscription,
+            'rawPayload': data,
+            'processedAt': firestore.SERVER_TIMESTAMP
+        })
+        print(f'✅ Transaction logged for user {user_id}')
+    except Exception as e:
+        print(f'❌ Failed to log transaction: {e}')
+    
+    # Update user premium status
     user_ref.update({
         'isPremium': True,
         'premiumSince': firestore.SERVER_TIMESTAMP,
@@ -81,11 +116,25 @@ def kofi_handler(request: Request):
     if phone and TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN:
         try:
             client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-            client.messages.create(
+            message = client.messages.create(
                 body='🎉 You are now a premium Clinic Scout user! You will receive instant SMS alerts.',
                 from_=TWILIO_PHONE_NUMBER,
                 to=phone,
             )
+            
+            # Log notification to Firestore
+            try:
+                db.collection('notifications').add({
+                    'userId': user_id,
+                    'phone': phone,
+                    'type': 'WELCOME',
+                    'sid': message.sid,
+                    'timestamp': firestore.SERVER_TIMESTAMP
+                })
+                print(f'✅ Welcome SMS logged: {message.sid}')
+            except Exception as e:
+                print(f'❌ Failed to log notification: {e}')
+                
         except Exception as e:
             # Log but do not fail the webhook
             print(f'SMS send error: {e}')

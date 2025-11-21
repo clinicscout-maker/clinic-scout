@@ -25,6 +25,7 @@ export default function PreferencesForm({ user, onClose }: { user: User, onClose
     const [province, setProvince] = useState("ON");
     const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
     const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
+    const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
     const [saved, setSaved] = useState(false);
 
@@ -38,6 +39,7 @@ export default function PreferencesForm({ user, onClose }: { user: User, onClose
                 setProvince(data.province || "ON");
                 setSelectedAreas(data.areas || []);
                 setSelectedLanguages(data.languages || []);
+                setEmail(data.email || "");
             }
         };
         fetchPreferences();
@@ -59,13 +61,22 @@ export default function PreferencesForm({ user, onClose }: { user: User, onClose
         e.preventDefault();
         setLoading(true);
         setSaved(false);
+
+        // Sanitize email: lowercase and trim
+        const sanitizedEmail = email.toLowerCase().trim();
+
         try {
             await setDoc(doc(db, "users", user.uid), {
                 province,
                 areas: selectedAreas,
                 languages: selectedLanguages,
+                email: sanitizedEmail,
                 updatedAt: new Date()
             }, { merge: true });
+
+            // Update local state to match sanitized version
+            setEmail(sanitizedEmail);
+
             setSaved(true);
             setTimeout(() => {
                 setSaved(false);
@@ -90,6 +101,21 @@ export default function PreferencesForm({ user, onClose }: { user: User, onClose
             <div>
                 <h3 className="font-bold text-slate-900 text-lg">Your Preferences</h3>
                 <p className="text-sm text-slate-500">Customize your alerts</p>
+            </div>
+
+            {/* Email Input */}
+            <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Email Address</label>
+                <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="user@example.com"
+                    className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-slate-900 focus:ring-0 transition-all text-sm font-medium text-slate-900 placeholder:text-slate-300"
+                />
+                <p className="text-[10px] text-slate-400 mt-1">
+                    We'll use this to link your payment.
+                </p>
             </div>
 
             {/* Province Selector */}

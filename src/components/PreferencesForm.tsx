@@ -21,11 +21,18 @@ const LOCATIONS: Record<string, string[]> = {
 
 const LANGUAGES = ["English", "French", "Mandarin", "Cantonese", "Punjabi", "Hindi", "Spanish", "Arabic"];
 
-export default function PreferencesForm({ user, mode = 'setup', onClose, onComplete }: { user: User, mode?: 'setup' | 'edit', onClose?: () => void, onComplete?: () => void }) {
+// Email validation helper
+const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+};
+
+export default function PreferencesForm({ user, mode = 'setup', onClose, onComplete }: { user: User, mode?: 'setup' | 'edit', onClose?: () => void, onComplete?: (email: string) => void }) {
     const [province, setProvince] = useState("ON");
     const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
     const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
     const [email, setEmail] = useState("");
+    const [emailError, setEmailError] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [loading, setLoading] = useState(false);
     const [saved, setSaved] = useState(false);
@@ -62,13 +69,15 @@ export default function PreferencesForm({ user, mode = 'setup', onClose, onCompl
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!email || !email.includes("@")) {
-            alert("Please enter a valid billing email.");
+        // Validate email
+        if (!email || !isValidEmail(email)) {
+            setEmailError('Please enter a valid email address');
             return;
         }
 
         setLoading(true);
         setSaved(false);
+        setEmailError(''); // Clear any previous errors
         try {
             await setDoc(doc(db, "users", user.uid), {
                 province,
@@ -81,7 +90,7 @@ export default function PreferencesForm({ user, mode = 'setup', onClose, onCompl
             setTimeout(() => {
                 setSaved(false);
                 if (onClose) onClose();
-                if (onComplete) onComplete(); // Trigger redirect for setup mode
+                if (onComplete) onComplete(email); // Pass email to parent for Ko-fi redirect
             }, 1500);
         } catch (error) {
             console.error("Error saving preferences:", error);
@@ -107,36 +116,73 @@ export default function PreferencesForm({ user, mode = 'setup', onClose, onCompl
                 <p className="text-sm text-slate-500">Customize your alerts</p>
             </div>
 
-            {/* Verified Identity */}
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Verified Identity</label>
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                        <ShieldCheck className="w-5 h-5 text-green-600" />
-                    </div>
-                    <div>
-                        <p className="font-bold text-slate-900">{phoneNumber || "No phone linked"}</p>
-                        <p className="text-xs text-green-600 font-bold flex items-center gap-1">
-                            <Check className="w-3 h-3" /> Verified
+            {/* Phone Number Input (Editable in setup mode, read-only in edit mode) */}
+            <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">
+                    Phone Number (Optional - for SMS alerts)
+                </label>
+                {mode === 'setup' ? (
+                    <div className="relative">
+                        <input
+                            type="tel"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            placeholder="+1 (416) 555-1234"
+                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 outline-none font-medium text-slate-900 placeholder:text-slate-400 transition-all"
+                        />
+                        <p className="text-xs text-slate-400 mt-2">
+                            Get instant SMS alerts when clinics open (optional)
                         </p>
                     </div>
-                </div>
+                ) : (
+                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                <ShieldCheck className="w-5 h-5 text-green-600" />
+                            </div>
+                            <div>
+                                <p className="font-bold text-slate-900">{phoneNumber || "No phone linked"}</p>
+                                <p className="text-xs text-green-600 font-bold flex items-center gap-1">
+                                    <Check className="w-3 h-3" /> Verified
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Billing Email */}
             <div>
                 <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Billing Email <span className="text-red-500">*</span></label>
                 <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <Mail className={clsx(
+                        "absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5",
+                        emailError ? "text-rose-400" : "text-slate-400"
+                    )} />
                     <input
                         type="email"
                         required
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="For receipt & activation"
-                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none font-medium text-slate-900 placeholder:text-slate-400 transition-all"
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            setEmailError(''); // Clear error as user types
+                        }}
+                        placeholder="your@email.com"
+                        className={clsx(
+                            "w-full pl-12 pr-4 py-3 rounded-xl border focus:ring-4 focus:ring-blue-500/20 outline-none font-medium text-slate-900 placeholder:text-slate-400 transition-all",
+                            emailError
+                                ? "border-rose-500 focus:border-rose-500"
+                                : "border-slate-200 focus:border-blue-500"
+                        )}
                     />
                 </div>
+                {emailError ? (
+                    <p className="text-xs text-rose-600 mt-2 font-medium">{emailError}</p>
+                ) : (
+                    <p className="text-xs text-slate-400 mt-2">
+                        Must match your payment email for instant activation
+                    </p>
+                )}
             </div>
 
             {/* Province Selector */}
@@ -216,13 +262,18 @@ export default function PreferencesForm({ user, mode = 'setup', onClose, onCompl
                 </div>
             </div>
 
+            {/* Legal Disclaimer - Clickwrap Notice */}
+            <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+                <strong>Disclaimer:</strong> By clicking below, you acknowledge that Clinic Scout is a technical notification service only. We do not guarantee appointments, provide medical advice, or offer preferential access to care.
+            </div>
+
             <button
                 type="submit"
                 disabled={loading}
                 className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2 disabled:opacity-50 hover:-translate-y-0.5"
             >
                 {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
-                {saved ? "Preferences Saved!" : (mode === 'setup' ? "Save & Proceed to Payment →" : "Save Changes")}
+                {saved ? "Preferences Saved!" : (mode === 'setup' ? "Save & Join on Ko-fi ($5/mo) →" : "Save Changes")}
             </button>
         </form>
     );

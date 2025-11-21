@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { User } from "firebase/auth";
+import { User, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
 import { doc, getDoc, collection, getDocs, onSnapshot } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { db, auth } from "@/lib/firebase";
 import Auth from "@/components/Auth";
 import ClinicList from "@/components/ClinicList";
 import PreferencesForm from "@/components/PreferencesForm";
@@ -52,6 +52,35 @@ export default function Home() {
             }
         };
         fetchClinicCount();
+    }, []);
+
+    // Handle Email Link Sign-in
+    useEffect(() => {
+        if (isSignInWithEmailLink(auth, window.location.href)) {
+            let email = window.localStorage.getItem('emailForSignIn');
+            if (!email) {
+                // User opened link on different device. Ask for email.
+                email = window.prompt('Please provide your email for confirmation');
+            }
+
+            if (email) {
+                signInWithEmailLink(auth, email, window.location.href)
+                    .then((result) => {
+                        // Clear email from storage
+                        window.localStorage.removeItem('emailForSignIn');
+                        setUser(result.user);
+                        // You can access the new user via result.user
+                        // Additional user info profile not available via:
+                        // result.additionalUserInfo.profile == null
+                        // You can check if the user is new or existing:
+                        // result.additionalUserInfo.isNewUser
+                    })
+                    .catch((error) => {
+                        console.error("Error signing in with email link", error);
+                        alert("Error signing in with email link: " + error.message);
+                    });
+            }
+        }
     }, []);
 
     const paymentUrl = KOFI_LINK;

@@ -1,17 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { User } from "firebase/auth";
-import { doc, getDoc, collection, getDocs, onSnapshot } from "firebase/firestore";
+import { User, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
+import { doc, getDoc, setDoc, collection, getDocs, query, where, limit, onSnapshot } from "firebase/firestore";
 import { db, auth } from "@/lib/firebase";
 import Auth from "@/components/Auth";
 import ClinicList from "@/components/ClinicList";
 import PreferencesForm from "@/components/PreferencesForm";
-import { Zap, Activity, Settings, MapPin, Clock, Sparkles } from "lucide-react";
+import { Zap, Activity, Settings, MapPin, Clock, Sparkles, Mail } from "lucide-react";
 
 // Real Ko-fi membership tier direct link
 const KOFI_LINK = "https://ko-fi.com/summary/2fa9d8df-c028-400e-bf9b-d3b065fab8cc";
-const KOFI_MANAGE_LINK = "https://ko-fi.com/account/subscriptions";
+// Ko-fi page for subscription management (users can contact you here)
+const KOFI_MANAGE_LINK = "https://ko-fi.com/clinicscout";
 
 export default function Home() {
     const [user, setUser] = useState<User | null>(null);
@@ -66,6 +67,76 @@ export default function Home() {
             }
         };
         fetchClinicCount();
+    }, []);
+
+    // Handle Email Link Sign-in
+    useEffect(() => {
+        if (isSignInWithEmailLink(auth, window.location.href)) {
+            let email = window.localStorage.getItem('emailForSignIn');
+            if (!email) {
+                // User opened link on different device. Ask for email.
+                email = window.prompt('Please provide your email for confirmation');
+            }
+
+            if (email) {
+                signInWithEmailLink(auth, email, window.location.href)
+                    .then(async (result) => {
+                        // Clear email from storage
+                        window.localStorage.removeItem('emailForSignIn');
+
+                        // STEP 1: Check if user document exists by UID
+                        const userRef = doc(db, "users", result.user.uid);
+                        const userSnap = await getDoc(userRef);
+
+                        if (!userSnap.exists()) {
+                            // STEP 2: User document doesn't exist by UID
+                            // Check if there's existing data by email (e.g., from webhook before login)
+                            console.log("🔍 Checking for existing user data by email:", result.user.email);
+
+                            const usersRef = collection(db, "users");
+                            const q = query(usersRef, where("email", "==", result.user.email), limit(1));
+                            const querySnapshot = await getDocs(q);
+
+                            if (!querySnapshot.empty) {
+                                // FOUND: Existing user data with this email
+                                const existingDoc = querySnapshot.docs[0];
+                                const existingData = existingDoc.data();
+
+                                console.log("✅ Found existing user data! Linking to new UID:", result.user.uid);
+
+                                // Create new document with UID, preserving existing data
+                                await setDoc(userRef, {
+                                    ...existingData,
+                                    uid: result.user.uid,
+                                    linkedAt: new Date()
+                                });
+
+                                // Optional: Delete old document to avoid duplicates
+                                // await deleteDoc(doc(db, "users", existingDoc.id));
+
+                            } else {
+                                // NOT FOUND: Create new user document
+                                console.log("✅ Creating new user document for:", result.user.email);
+                                await setDoc(userRef, {
+                                    email: result.user.email,
+                                    createdAt: new Date(),
+                                    isPremium: false,
+                                    areas: [],
+                                    province: 'ON'
+                                });
+                            }
+                        } else {
+                            console.log("✅ User document already exists");
+                        }
+
+                        setUser(result.user);
+                    })
+                    .catch((error) => {
+                        console.error("Error signing in with email link", error);
+                        alert("Error signing in with email link: " + error.message);
+                    });
+            }
+        }
     }, []);
 
     const paymentUrl = KOFI_LINK;
@@ -141,67 +212,79 @@ export default function Home() {
                             </div>
                         )}
 
-                        {/* Step 2: Setup - Show PreferencesForm in embedded mode */}
-                        {user && !hasProfile && !isWaitingForPayment && (
+                        {/* Step 2: Setup & Pay - Show PreferencesForm or Listening state */}
+                        {user && !isPremium && (
                             <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/50 p-6 animate-fade-in">
-                                <div className="mb-4">
-                                    <h2 className="text-2xl font-bold text-slate-900 mb-2">Set Your Preferences</h2>
-                                    <p className="text-sm text-slate-500">Tell us where to look for clinics</p>
-                                </div>
-                                <PreferencesForm
-                                    user={user}
-                                    mode="setup"
-                                    onComplete={() => {
-                                        // Auto-redirect to Ko-fi checkout
-                                        setIsWaitingForPayment(true);
-                                        window.open(KOFI_LINK, '_blank');
-                                    }}
-                                />
+                                {!isWaitingForPayment ? (
+                                    <>
+                                        <div className="mb-4">
+                                            <h2 className="text-2xl font-bold text-slate-900 mb-2">Setup & Pay</h2>
+                                            <p className="text-sm text-slate-500">Set your preferences and join premium</p>
+                                        </div>
+                                        <PreferencesForm
+                                            user={user}
+                                            mode="setup"
+                                            onComplete={(email: string) => {
+                                                // Redirect to Ko-fi with email
+                                                setIsWaitingForPayment(true);
+                                                const kofiUrl = `${KOFI_LINK}?email=${encodeURIComponent(email)}`;
+                                                window.open(kofiUrl, '_blank', 'noopener,noreferrer');
+                                            }}
+                                        />
+                                    </>
+                                ) : (
+                                    // Listening for Payment UI
+                                    <div className="text-center py-8">
+                                        <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white mx-auto mb-6 shadow-xl shadow-blue-500/30 relative">
+                                            <Activity className="w-8 h-8" />
+                                            <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                                <span className="relative inline-flex rounded-full h-4 w-4 bg-blue-500"></span>
+                                            </span>
+                                        </div>
+                                        <h2 className="text-2xl font-bold text-slate-900 mb-3">Listening for Payment...</h2>
+                                        <p className="text-slate-500 mb-6">
+                                            Complete your Ko-fi payment in the new tab. We'll activate your account automatically!
+                                        </p>
+
+                                        <div className="bg-amber-50 rounded-xl p-4 border border-amber-100 mb-6 max-w-md mx-auto">
+                                            <p className="text-sm text-amber-900 mb-2">
+                                                <strong>⚠️ Important:</strong> Use this exact email on Ko-fi:
+                                            </p>
+                                            <div className="bg-white rounded-lg p-3 border border-amber-200">
+                                                <p className="text-base font-bold text-slate-900 text-center break-all">
+                                                    {userData?.email || "your billing email"}
+                                                </p>
+                                            </div>
+                                            <p className="text-xs text-amber-700 mt-2 text-center">
+                                                Copy this email and paste it into the Ko-fi payment form for instant activation
+                                            </p>
+                                        </div>
+
+                                        <div className="flex flex-col gap-3 text-sm">
+                                            <a
+                                                href={KOFI_LINK}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-blue-600 hover:text-blue-700 font-medium underline"
+                                            >
+                                                Didn't open? Click here to complete payment
+                                            </a>
+                                            <button
+                                                onClick={() => setIsWaitingForPayment(false)}
+                                                className="text-slate-400 hover:text-slate-600 text-xs"
+                                            >
+                                                Go back to edit preferences
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         )}
 
-                        {/* Listening for Payment - Show after preferences saved */}
-                        {user && hasProfile && !isPremium && isWaitingForPayment && (
-                            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/50 p-8 text-center animate-fade-in">
-                                <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white mx-auto mb-6 shadow-xl shadow-blue-500/30 relative">
-                                    <Activity className="w-8 h-8" />
-                                    <span className="absolute -top-1 -right-1 flex h-4 w-4">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-4 w-4 bg-blue-500"></span>
-                                    </span>
-                                </div>
-                                <h2 className="text-2xl font-bold text-slate-900 mb-3">Listening for Payment...</h2>
-                                <p className="text-slate-500 mb-6">
-                                    Complete your Ko-fi payment in the new tab. We'll activate your account automatically!
-                                </p>
 
-                                <div className="bg-amber-50 rounded-xl p-4 border border-amber-100 mb-6">
-                                    <p className="text-xs text-amber-700">
-                                        <strong>⚠️ Important:</strong> Use <span className="font-bold underline">{userData?.email || "your billing email"}</span> on Ko-fi to activate instantly.
-                                    </p>
-                                </div>
-
-                                <div className="flex flex-col gap-3 text-sm">
-                                    <a
-                                        href={KOFI_LINK}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-blue-600 hover:text-blue-700 font-medium underline"
-                                    >
-                                        Didn't open? Click here to complete payment
-                                    </a>
-                                    <button
-                                        onClick={() => setIsWaitingForPayment(false)}
-                                        className="text-slate-400 hover:text-slate-600 text-xs"
-                                    >
-                                        Go back to edit preferences
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Step 4: Active - Show when user has profile AND is premium */}
-                        {user && hasProfile && isPremium && (
+                        {/* Step 3: Active - Show when user is premium (PRIORITY: isPremium overrides hasProfile) */}
+                        {user && isPremium && (
                             <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/50 p-8 text-center animate-fade-in">
                                 <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center text-white mx-auto mb-4 shadow-xl shadow-green-500/30">
                                     <Activity className="w-8 h-8" />
@@ -232,8 +315,8 @@ export default function Home() {
                             </div>
                         )}
 
-                        {/* My Preferences Card - Only show if user is active (has profile and premium) */}
-                        {user && hasProfile && isPremium && userData && (
+                        {/* My Preferences Card - Show for all premium users */}
+                        {user && isPremium && (
                             <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/50 p-6 animate-fade-in">
                                 <div className="flex items-center justify-between mb-4">
                                     <h3 className="font-bold text-slate-900 flex items-center gap-2">
@@ -244,43 +327,57 @@ export default function Home() {
                                         onClick={() => setShowPreferencesModal(true)}
                                         className="text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 px-3 py-1.5 rounded-full hover:bg-blue-100 transition-colors"
                                     >
-                                        Edit Settings
+                                        {hasProfile ? 'Edit Settings' : 'Set Preferences'}
                                     </button>
                                 </div>
 
-                                <div className="space-y-4">
-                                    <div>
-                                        <p className="text-xs font-bold text-slate-400 uppercase mb-2">Monitoring Area</p>
-                                        <div className="flex flex-wrap gap-2">
-                                            <span className="px-2 py-1 rounded-md bg-slate-100 text-slate-600 text-xs font-bold border border-slate-200">
-                                                {userData.province || "ON"}
-                                            </span>
-                                            {userData.areas && userData.areas.length > 0 ? (
-                                                userData.areas.map((area: string) => (
-                                                    <span key={area} className="px-2 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-bold border border-blue-100 flex items-center gap-1">
-                                                        <MapPin className="w-3 h-3" />
-                                                        {area}
-                                                    </span>
-                                                ))
-                                            ) : (
-                                                <span className="text-xs text-amber-600 font-medium italic">No areas selected</span>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {userData.languages && userData.languages.length > 0 && (
+                                {hasProfile && userData ? (
+                                    <div className="space-y-4">
                                         <div>
-                                            <p className="text-xs font-bold text-slate-400 uppercase mb-2">Languages</p>
+                                            <p className="text-xs font-bold text-slate-400 uppercase mb-2">Monitoring Area</p>
                                             <div className="flex flex-wrap gap-2">
-                                                {userData.languages.map((lang: string) => (
-                                                    <span key={lang} className="px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-100">
-                                                        {lang}
-                                                    </span>
-                                                ))}
+                                                <span className="px-2 py-1 rounded-md bg-slate-100 text-slate-600 text-xs font-bold border border-slate-200">
+                                                    {userData.province || "ON"}
+                                                </span>
+                                                {userData.areas && userData.areas.length > 0 ? (
+                                                    userData.areas.map((area: string) => (
+                                                        <span key={area} className="px-2 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-bold border border-blue-100 flex items-center gap-1">
+                                                            <MapPin className="w-3 h-3" />
+                                                            {area}
+                                                        </span>
+                                                    ))
+                                                ) : (
+                                                    <span className="text-xs text-amber-600 font-medium italic">No areas selected</span>
+                                                )}
                                             </div>
                                         </div>
-                                    )}
-                                </div>
+
+                                        {userData.languages && userData.languages.length > 0 && (
+                                            <div>
+                                                <p className="text-xs font-bold text-slate-400 uppercase mb-2">Languages</p>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {userData.languages.map((lang: string) => (
+                                                        <span key={lang} className="px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-100">
+                                                            {lang}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-6">
+                                        <p className="text-sm text-slate-500 mb-3">
+                                            Set your monitoring preferences to get started
+                                        </p>
+                                        <button
+                                            onClick={() => setShowPreferencesModal(true)}
+                                            className="text-sm font-bold text-blue-600 hover:text-blue-700 underline"
+                                        >
+                                            Configure Now →
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         )}
 
@@ -322,6 +419,27 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
+
+                {/* Footer - Legal Disclaimers */}
+                <footer className="mt-16 pt-8 border-t border-slate-200">
+                    <div className="max-w-4xl mx-auto space-y-4">
+                        <p className="text-xs text-center text-slate-500 leading-relaxed">
+                            Clinic Scout is an independent technology service not affiliated with any government or medical body. All data is publicly available.
+                        </p>
+                        <div className="flex items-center justify-center gap-6 text-xs">
+                            <a href="#" className="text-slate-400 hover:text-slate-600 underline transition-colors">
+                                Terms of Service
+                            </a>
+                            <span className="text-slate-300">•</span>
+                            <a href="#" className="text-slate-400 hover:text-slate-600 underline transition-colors">
+                                Privacy Policy
+                            </a>
+                        </div>
+                        <p className="text-[10px] text-center text-slate-400">
+                            © {new Date().getFullYear()} Clinic Scout. All rights reserved.
+                        </p>
+                    </div>
+                </footer>
             </main>
 
             {/* Preferences Modal */}

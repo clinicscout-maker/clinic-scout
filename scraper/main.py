@@ -3,13 +3,6 @@ import os
 import json
 import google.generativeai as genai
 from playwright.async_api import async_playwright
-try:
-    from notifications import notifier
-except ImportError:
-    # Fallback if running from a different context
-    import sys
-    sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-    from notifications import notifier
 
 # Configure Gemini
 # Ensure GEMINI_API_KEY is set in your environment variables
@@ -111,6 +104,8 @@ def check_preferences(result):
 
 # Initialize Firebase Global
 db = None
+notifier = None
+
 try:
     import firebase_admin
     from firebase_admin import credentials
@@ -132,6 +127,16 @@ try:
             firebase_admin.initialize_app(cred)
         db = firestore.client()
         print("✅ Firebase initialized successfully")
+        
+        # Initialize notifier with Firestore client
+        try:
+            import sys
+            sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+            from notifications import NotificationManager
+            notifier = NotificationManager(db=db)
+            print("✅ NotificationManager initialized with Firestore logging")
+        except ImportError as e:
+            print(f"⚠️ Failed to import NotificationManager: {e}")
     else:
         print("⚠️ serviceAccountKey.json not found. Firestore updates disabled.")
 
@@ -234,7 +239,9 @@ async def main():
             if status == "OPEN":
                 if check_preferences(result):
                     msg = f"🚨 OPEN CLINIC FOUND! 🚨\nName: {result.get('clinic_name')}\nDistrict: {result.get('district')}\nPhone: {result.get('phone_number')}\nURL: {url}"
-                    notifier.send_notification(msg)
+                    # Pass clinic_id for logging (user_id would come from user preferences in production)
+                    if notifier:
+                        notifier.send_notification(msg, clinic_id=clinic_id, user_id="admin")
                 else:
                     print(f"Skipping notification for {url} (Does not match preferences)")
                 
