@@ -21,7 +21,7 @@ const LOCATIONS: Record<string, string[]> = {
 
 const LANGUAGES = ["English", "French", "Mandarin", "Cantonese", "Punjabi", "Hindi", "Spanish", "Arabic"];
 
-export default function PreferencesForm({ user, onClose }: { user: User, onClose?: () => void }) {
+export default function PreferencesForm({ user, mode = 'setup', onClose, onComplete }: { user: User, mode?: 'setup' | 'edit', onClose?: () => void, onComplete?: () => void }) {
     const [province, setProvince] = useState("ON");
     const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
     const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
@@ -81,6 +81,7 @@ export default function PreferencesForm({ user, onClose }: { user: User, onClose
             setTimeout(() => {
                 setSaved(false);
                 if (onClose) onClose();
+                if (onComplete) onComplete(); // Trigger redirect for setup mode
             }, 1500);
         } catch (error) {
             console.error("Error saving preferences:", error);
@@ -91,7 +92,10 @@ export default function PreferencesForm({ user, onClose }: { user: User, onClose
     };
 
     return (
-        <form onSubmit={handleSave} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6 relative">
+        <form onSubmit={handleSave} className={clsx(
+            "bg-white p-6 rounded-2xl space-y-6 relative",
+            mode === 'edit' ? "shadow-sm border border-slate-200" : ""
+        )}>
             {onClose && (
                 <button type="button" onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
                     <X className="w-5 h-5" />
@@ -218,7 +222,7 @@ export default function PreferencesForm({ user, onClose }: { user: User, onClose
                 className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2 disabled:opacity-50 hover:-translate-y-0.5"
             >
                 {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
-                {saved ? "Preferences Saved!" : "Save Changes"}
+                {saved ? "Preferences Saved!" : (mode === 'setup' ? "Save & Proceed to Payment →" : "Save Changes")}
             </button>
         </form>
     );

@@ -1,47 +1,67 @@
-# Dependencies
-node_modules/
-.pnp
-.pnp.js
+# ========================================
+# CRITICAL: NEVER COMMIT THESE FILES
+# ========================================
 
-# Testing
-coverage/
-
-# Next.js
-.next/
-out/
-build/
-dist/
-
-# Production
-build/
-
-# Misc
-.DS_Store
-*.pem
-
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# Local env files
+# Environment files (CONTAINS API KEYS!)
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env*.local
 
-# Vercel
-.vercel
+# Firebase Service Account (CONTAINS PRIVATE KEY!)
+serviceAccountKey.json
+firebase-adminsdk-*.json
 
+# Ko-fi Token (CONTAINS SECRET!)
+.kofi_token
+
+# Twilio credentials
+twilio_env.sh
+
+# ========================================
+# Dependencies
+# ========================================
+node_modules/
+.pnp
+.pnp.js
+
+# ========================================
+# Next.js Build Output
+# ========================================
+.next/
+out/
+build/
+dist/
+
+# ========================================
+# Testing & Coverage
+# ========================================
+coverage/
+.nyc_output/
+
+# ========================================
+# Debug & Logs
+# ========================================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.log
+scraper.log
+
+# ========================================
 # Firebase
+# ========================================
 firebase-debug.log
 firestore-debug.log
 ui-debug.log
 .firebase/
 
+# ========================================
 # Python
+# ========================================
 __pycache__/
 *.py[cod]
 *$py.class
@@ -49,26 +69,33 @@ __pycache__/
 .venv.nosync/
 *.egg-info/
 .pytest_cache/
+.venv
+.venv 2
 
-# IDE
+# ========================================
+# IDE / Editor
+# ========================================
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+.DS_Store
 
-# Logs
-*.log
-scraper.log
+# ========================================
+# Deployment
+# ========================================
+.vercel
 
-# Secrets
-serviceAccountKey.json
-.kofi_token
-
-# Backup files
+# ========================================
+# Backup & Temp Files
+# ========================================
 *_backup.csv
 * 2.*
+*.bak
+*.tmp
+
+# ========================================
+# Other Folders (Not for deployment)
+# ========================================
 web-app/
-.venv
-.venv 2
-twilio_env.sh

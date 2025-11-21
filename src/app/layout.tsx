@@ -5,8 +5,9 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Clinic Scout - Find a Doctor Fast",
-    description: "Real-time alerts for family doctor availability in Canada.",
+    metadataBase: new URL('https://www.clinicscout.ca'),
+    title: "Clinic Scout | Find a Family Doctor in Canada",
+    description: "Monitor 250+ clinics in Toronto, Vancouver, and Calgary. Get instant SMS alerts when a spot opens.",
 };
 
 export default function RootLayout({

@@ -3,17 +3,21 @@
 import { useState, useEffect } from "react";
 import { User } from "firebase/auth";
 import { doc, getDoc, collection, getDocs, onSnapshot } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { db, auth } from "@/lib/firebase";
 import Auth from "@/components/Auth";
 import ClinicList from "@/components/ClinicList";
 import PreferencesForm from "@/components/PreferencesForm";
-import { Zap, Activity, Settings, MapPin, Clock } from "lucide-react";
+import { Zap, Activity, Settings, MapPin, Clock, Sparkles } from "lucide-react";
 
-const KOFI_LINK = "https://ko-fi.com/clinicscout/tiers";
+// Real Ko-fi membership tier direct link
+const KOFI_LINK = "https://ko-fi.com/summary/2fa9d8df-c028-400e-bf9b-d3b065fab8cc";
+const KOFI_MANAGE_LINK = "https://ko-fi.com/account/subscriptions";
 
 export default function Home() {
     const [user, setUser] = useState<User | null>(null);
     const [isPremium, setIsPremium] = useState(false);
+    const [hasProfile, setHasProfile] = useState(false);
+    const [isWaitingForPayment, setIsWaitingForPayment] = useState(false);
     const [clinicCount, setClinicCount] = useState(0);
     const [showPreferencesModal, setShowPreferencesModal] = useState(false);
     const [userData, setUserData] = useState<any>(null);
@@ -22,6 +26,8 @@ export default function Home() {
         if (!user) {
             setUserData(null);
             setIsPremium(false);
+            setHasProfile(false);
+            setIsWaitingForPayment(false);
             return;
         }
 
@@ -31,11 +37,19 @@ export default function Home() {
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 setUserData(data);
-                if (data.isPremium) setIsPremium(true);
-                else setIsPremium(false);
+                if (data.isPremium) {
+                    setIsPremium(true);
+                    setIsWaitingForPayment(false); // Payment received!
+                } else {
+                    setIsPremium(false);
+                }
+                // Fix: Check for areas (array) instead of area (singular)
+                if (data.areas && data.areas.length > 0) setHasProfile(true);
+                else setHasProfile(false);
             } else {
                 setUserData(null);
                 setIsPremium(false);
+                setHasProfile(false);
             }
         });
 
@@ -70,12 +84,25 @@ export default function Home() {
                             <p className="text-xs text-slate-500">Medical Availability Tracker</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2 bg-teal-50 border border-teal-200 rounded-full px-4 py-2">
-                        <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-500 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-600"></span>
-                        </span>
-                        <span className="text-xs font-bold text-teal-700">Monitoring {clinicCount}+ Clinics Live</span>
+                    <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2 bg-teal-50 border border-teal-200 rounded-full px-4 py-2">
+                            <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-500 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-600"></span>
+                            </span>
+                            <span className="text-xs font-bold text-teal-700">Monitoring {clinicCount}+ Clinics Live</span>
+                        </div>
+                        {user && (
+                            <button
+                                onClick={() => {
+                                    auth.signOut();
+                                    window.location.reload();
+                                }}
+                                className="text-xs text-slate-500 hover:text-slate-700 underline"
+                            >
+                                Logout
+                            </button>
+                        )}
                     </div>
                 </div>
             </header>
@@ -89,22 +116,124 @@ export default function Home() {
                         {/* Hero Text (Only show if not logged in) */}
                         {!user && (
                             <div className="space-y-6">
+                                <div className="flex flex-wrap gap-3">
+                                    <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold border border-blue-100">
+                                        Trusted by 1,000+ Canadians
+                                    </span>
+                                    <span className="px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-xs font-bold border border-purple-100 flex items-center gap-1">
+                                        <Sparkles className="w-3 h-3" />
+                                        AI-Powered Real-time Scanning
+                                    </span>
+                                </div>
                                 <h1 className="text-4xl md:text-6xl font-black tracking-tight text-slate-900 leading-tight">
                                     Find a Family Doctor <span className="text-blue-600">Fast</span>
                                 </h1>
                                 <p className="text-lg text-slate-600 leading-relaxed">
-                                    Stop refreshing websites. We monitor every clinic 24/7 and send you an instant SMS the second a spot opens.
+                                    Stop refreshing websites. Our <span className="font-bold text-slate-900">AI agents</span> monitor 250+ clinics 24/7 and interpret waitlist status instantly, sending you an SMS the second a spot opens.
                                 </p>
                             </div>
                         )}
 
-                        {/* Registration / Auth Card */}
-                        <div className="relative z-10">
-                            <Auth onLogin={setUser} paymentUrl={paymentUrl} billingEmail={userData?.email} />
-                        </div>
+                        {/* Step 1: Login (User is null) */}
+                        {!user && (
+                            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/50 overflow-hidden animate-fade-in">
+                                <Auth onLogin={setUser} />
+                            </div>
+                        )}
 
-                        {/* My Preferences Card (Logged In) */}
-                        {user && userData && (
+                        {/* Step 2: Setup - Show PreferencesForm in embedded mode */}
+                        {user && !hasProfile && !isWaitingForPayment && (
+                            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/50 p-6 animate-fade-in">
+                                <div className="mb-4">
+                                    <h2 className="text-2xl font-bold text-slate-900 mb-2">Set Your Preferences</h2>
+                                    <p className="text-sm text-slate-500">Tell us where to look for clinics</p>
+                                </div>
+                                <PreferencesForm
+                                    user={user}
+                                    mode="setup"
+                                    onComplete={() => {
+                                        // Auto-redirect to Ko-fi checkout
+                                        setIsWaitingForPayment(true);
+                                        window.open(KOFI_LINK, '_blank');
+                                    }}
+                                />
+                            </div>
+                        )}
+
+                        {/* Listening for Payment - Show after preferences saved */}
+                        {user && hasProfile && !isPremium && isWaitingForPayment && (
+                            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/50 p-8 text-center animate-fade-in">
+                                <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white mx-auto mb-6 shadow-xl shadow-blue-500/30 relative">
+                                    <Activity className="w-8 h-8" />
+                                    <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-4 w-4 bg-blue-500"></span>
+                                    </span>
+                                </div>
+                                <h2 className="text-2xl font-bold text-slate-900 mb-3">Listening for Payment...</h2>
+                                <p className="text-slate-500 mb-6">
+                                    Complete your Ko-fi payment in the new tab. We'll activate your account automatically!
+                                </p>
+
+                                <div className="bg-amber-50 rounded-xl p-4 border border-amber-100 mb-6">
+                                    <p className="text-xs text-amber-700">
+                                        <strong>⚠️ Important:</strong> Use <span className="font-bold underline">{userData?.email || "your billing email"}</span> on Ko-fi to activate instantly.
+                                    </p>
+                                </div>
+
+                                <div className="flex flex-col gap-3 text-sm">
+                                    <a
+                                        href={KOFI_LINK}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 hover:text-blue-700 font-medium underline"
+                                    >
+                                        Didn't open? Click here to complete payment
+                                    </a>
+                                    <button
+                                        onClick={() => setIsWaitingForPayment(false)}
+                                        className="text-slate-400 hover:text-slate-600 text-xs"
+                                    >
+                                        Go back to edit preferences
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Step 4: Active - Show when user has profile AND is premium */}
+                        {user && hasProfile && isPremium && (
+                            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/50 p-8 text-center animate-fade-in">
+                                <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center text-white mx-auto mb-4 shadow-xl shadow-green-500/30">
+                                    <Activity className="w-8 h-8" />
+                                </div>
+                                <h2 className="text-2xl font-bold text-slate-900 mb-2">You're Active!</h2>
+                                <p className="text-slate-500 mb-6">
+                                    We are monitoring {clinicCount}+ clinics for you 24/7.
+                                </p>
+
+                                <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                    <div className="flex justify-between items-center text-sm">
+                                        <span className="text-slate-500">Status</span>
+                                        <span className="font-bold text-green-600 flex items-center gap-1">
+                                            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                                            Monitoring
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <a
+                                    href={KOFI_MANAGE_LINK}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mt-6 text-sm text-blue-500 hover:text-blue-600 font-medium inline-flex items-center gap-1"
+                                >
+                                    Manage Subscription <Zap className="w-3 h-3" />
+                                </a>
+                            </div>
+                        )}
+
+                        {/* My Preferences Card - Only show if user is active (has profile and premium) */}
+                        {user && hasProfile && isPremium && userData && (
                             <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/50 p-6 animate-fade-in">
                                 <div className="flex items-center justify-between mb-4">
                                     <h3 className="font-bold text-slate-900 flex items-center gap-2">
@@ -199,7 +328,7 @@ export default function Home() {
             {showPreferencesModal && user && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fade-in">
                     <div className="w-full max-w-lg relative">
-                        <PreferencesForm user={user} onClose={() => setShowPreferencesModal(false)} />
+                        <PreferencesForm user={user} mode="edit" onClose={() => setShowPreferencesModal(false)} />
                     </div>
                 </div>
             )}
