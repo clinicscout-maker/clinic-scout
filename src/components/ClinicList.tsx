@@ -34,7 +34,7 @@ const LOCATIONS: Record<string, string[]> = {
 
 const LANGUAGES = ["English", "French", "Mandarin", "Cantonese", "Punjabi", "Hindi", "Spanish", "Arabic"];
 
-export default function ClinicList({ paymentUrl, isPremium = false }: { paymentUrl: string, isPremium?: boolean }) {
+export default function ClinicList({ paymentUrl, isPremium = false, onLastCheckedUpdate }: { paymentUrl: string, isPremium?: boolean, onLastCheckedUpdate?: (date: Date) => void }) {
     const [clinics, setClinics] = useState<Clinic[]>([]);
     const [filteredClinics, setFilteredClinics] = useState<Clinic[]>([]);
     const [loading, setLoading] = useState(true);
@@ -92,6 +92,18 @@ export default function ClinicList({ paymentUrl, isPremium = false }: { paymentU
 
             // Filter out ERROR and UNCERTAIN
             const validClinics = clinicData.filter(c => c.status !== "ERROR" && c.status !== "UNCERTAIN");
+
+            // Find most recent update time
+            if (onLastCheckedUpdate && validClinics.length > 0) {
+                const mostRecent = validClinics.reduce((latest, clinic) => {
+                    const clinicDate = clinic.updatedAt?.toDate ? clinic.updatedAt.toDate() : new Date(clinic.updatedAt);
+                    const latestDate = latest?.toDate ? latest.toDate() : new Date(latest || 0);
+                    return clinicDate > latestDate ? clinic.updatedAt : latest;
+                }, validClinics[0].updatedAt);
+
+                const mostRecentDate = mostRecent?.toDate ? mostRecent.toDate() : new Date(mostRecent);
+                onLastCheckedUpdate(mostRecentDate);
+            }
 
             setClinics(validClinics);
             setLoading(false);

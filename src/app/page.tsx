@@ -15,6 +15,20 @@ const KOFI_LINK = "https://ko-fi.com/summary/2fa9d8df-c028-400e-bf9b-d3b065fab8c
 // Ko-fi page for subscription management (users can contact you here)
 const KOFI_MANAGE_LINK = "https://ko-fi.com/clinicscout";
 
+// Helper function to calculate time ago
+function getTimeAgo(date: Date): string {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    return `${diffDays}d ago`;
+}
+
 export default function Home() {
     const [user, setUser] = useState<User | null>(null);
     const [isPremium, setIsPremium] = useState(false);
@@ -23,6 +37,7 @@ export default function Home() {
     const [clinicCount, setClinicCount] = useState(0);
     const [showPreferencesModal, setShowPreferencesModal] = useState(false);
     const [userData, setUserData] = useState<any>(null);
+    const [lastChecked, setLastChecked] = useState<Date | null>(null);
 
     useEffect(() => {
         if (!user) {
@@ -179,7 +194,7 @@ export default function Home() {
                 </div>
             </header>
 
-            <main className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
+            <main className="max-w-7xl mx-auto px-4 md:px-8 pt-6 pb-8 md:py-12">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
 
                     {/* LEFT COLUMN: Action Zone (Sticky) */}
@@ -413,10 +428,10 @@ export default function Home() {
                                 </h2>
                                 <div className="hidden md:flex items-center gap-2 text-xs font-medium text-slate-500">
                                     <Clock className="w-3 h-3" />
-                                    Last checked 2m ago
+                                    Last checked {lastChecked ? getTimeAgo(lastChecked) : 'recently'}
                                 </div>
                             </div>
-                            <ClinicList paymentUrl={paymentUrl} isPremium={isPremium} />
+                            <ClinicList paymentUrl={paymentUrl} isPremium={isPremium} onLastCheckedUpdate={setLastChecked} />
                         </div>
                     </div>
                 </div>

@@ -1,25 +1,25 @@
 id,name,url,city,province
-appletree_new_patient,Appletree Medical Group,https://appletreemedicalgroup.com/patients/register-new-patient/,Ontario Wide,ON
-mci_doctors_office,MCI The Doctor's Office,https://mci-doctorsoffice.ca/accepting-new-patients/,Ontario Wide,ON
-well_health_clinics,WELL Health Medical Centres,https://wellclinics.ca/accepting-new-patients/,Ontario Wide,ON
-md_connected,MD Connected,https://www.mdconnected.ca/family-practice/,Ontario Wide,ON
-cloud_care_clinics,Cloud Care Clinics,https://cloudcareclinics.ca/new-online-booking/,Toronto,ON
-good_doctors,Good Doctors Medical,https://gooddoctors.ca/site/register-new-patient/,Ontario Wide,ON
-magenta_health,Magenta Health,https://www.magentahealth.ca/new-patients,Toronto,ON
-albany_medical,Albany Medical Clinic,https://www.albanyclinic.ca/new-patient-registration/registration-form/,Toronto,ON
-infinity_health,Infinity Health Centre,https://infinityhealthcentre.com/new-patients,Toronto,ON
-integra_health,Integra Health Centre,https://www.integrahealth.ca/contact-us,Toronto,ON
-taddle_creek_fht,Taddle Creek FHT,https://taddlecreekfht.ca/about-us/becoming-a-patient/,Toronto,ON
-st_michaels_fht,St. Michael's Academic FHT,https://unityhealth.to/areas-of-care/programs-and-clinics/family-and-community-medicine/,Toronto,ON
-tw_fht_bathurst,Toronto Western FHT (Bathurst),https://www.twfht.ca/displayPage.php?page=LookingForAPhysician,Toronto,ON
-village_fht,Village Family Health Team,https://villagefht.ca/new-patients/,Toronto,ON
-citrus_medical,Citrus Medical Centre,https://www.citrusmedical.ca/register,Toronto,ON
-corktown_medical,Corktown Medical Centre,https://corktownmedical.com/new-patients/,Toronto,ON
-healthsource_medical,HealthSource Medical,https://hsmedical.ca/new-patients/,Toronto,ON
-grace_medical,Grace Medical,https://www.gracemedicalclinic.ca/register,Toronto,ON
-bloor_medical,Bloor Medical Clinic,https://bloormedical.ca/new-patients/,Toronto,ON
-harbourfront_medical,Harbourfront Medical,https://hmedical.ca/new-family-doctor,Toronto,ON
-queens_quay_medical,Queen's Quay Medical,https://queensquaymedical.com/registration/,Toronto,ON
+appletree_new_patient,Appletree Medical Group,https://appletreemedicalgroup.com/patients/register-new-patient/,Toronto,ON
+mci_doctors_office,MCI The Doctor's Office,https://mci-doctorsoffice.ca/accepting-new-patients/,Toronto,ON
+well_health_clinics,WELL Health Medical Centres,https://wellclinics.ca/accepting-new-patients/,Toronto,ON
+md_connected,MD Connected,https://www.mdconnected.ca/family-practice/,Toronto,ON
+cloud_care_clinics,Cloud Care Clinics,https://cloudcareclinics.ca/new-online-booking/,Downtown Toronto,ON
+good_doctors,Good Doctors Medical,https://gooddoctors.ca/site/register-new-patient/,Downtown Toronto,ON
+magenta_health,Magenta Health,https://www.magentahealth.ca/new-patients,Midtown Toronto,ON
+albany_medical,Albany Medical Clinic,https://www.albanyclinic.ca/new-patient-registration/registration-form/,Downtown Toronto,ON
+infinity_health,Infinity Health Centre,https://infinityhealthcentre.com/new-patients,Downtown Toronto,ON
+integra_health,Integra Health Centre,https://www.integrahealth.ca/contact-us,Downtown Toronto,ON
+taddle_creek_fht,Taddle Creek FHT,https://taddlecreekfht.ca/about-us/becoming-a-patient/,Downtown Toronto,ON
+st_michaels_fht,St. Michael's Academic FHT,https://unityhealth.to/areas-of-care/programs-and-clinics/family-and-community-medicine/,Downtown Toronto,ON
+tw_fht_bathurst,Toronto Western FHT (Bathurst),https://www.twfht.ca/displayPage.php?page=LookingForAPhysician,Downtown Toronto,ON
+village_fht,Village Family Health Team,https://villagefht.ca/new-patients/,Downtown Toronto,ON
+citrus_medical,Citrus Medical Centre,https://www.citrusmedical.ca/register,Downtown Toronto,ON
+corktown_medical,Corktown Medical Centre,https://corktownmedical.com/new-patients/,Downtown Toronto,ON
+healthsource_medical,HealthSource Medical,https://hsmedical.ca/new-patients/,Downtown Toronto,ON
+grace_medical,Grace Medical,https://www.gracemedicalclinic.ca/register,Downtown Toronto,ON
+bloor_medical,Bloor Medical Clinic,https://bloormedical.ca/new-patients/,Downtown Toronto,ON
+harbourfront_medical,Harbourfront Medical,https://hmedical.ca/new-family-doctor,Downtown Toronto,ON
+queens_quay_medical,Queen's Quay Medical,https://queensquaymedical.com/registration/,Downtown Toronto,ON
 spadina_health,Spadina Health Centre,https://spadinahealth.ca/register/,Toronto,ON
 college_care_medical,College Care Medical,https://collegecaremedical.ca/register/,Toronto,ON
 yonge_eglinton_medical,Yonge Eglinton Medical,https://yemc.ca/new-patients/,Toronto,ON
@@ -125,7 +125,7 @@ well_lonsdale,WELL Health - Lonsdale,https://wellclinics.ca/british-columbia/nor
 well_burnaby,WELL Health - Burnaby,https://wellclinics.ca/british-columbia/burnaby/,Burnaby,BC
 well_surrey,WELL Health - Surrey,https://wellclinics.ca/british-columbia/surrey/,Surrey,BC
 well_coquitlam,WELL Health - Coquitlam,https://wellclinics.ca/british-columbia/coquitlam/,Coquitlam,BC
-well_white_rock,WELL Health - White Rock,https://wellclinics.ca/british-columbia/white-rock/,White Rock,BC
+well_white_rock,WELL Health - White Rock,https://wellclinics.ca/british-columbia/white-rock/,Vancouver,BC
 coal_harbour_medical,Coal Harbour Medical,https://www.coalharbourmedical.com/new-patients,Vancouver,BC
 yale_medical,Yale Medical Centre,https://yalemedical.ca/,Vancouver,BC
 granville_medical,Granville Medical Clinic,https://granvillemedical.ca/,Vancouver,BC
@@ -193,67 +193,67 @@ primacy_surrey,Primacy - Surrey,https://primacy.ca/locations/surrey/,Surrey,BC
 primacy_coquitlam,Primacy - Coquitlam,https://primacy.ca/locations/coquitlam/,Coquitlam,BC
 primacy_langley,Primacy - Langley,https://primacy.ca/locations/langley/,Langley,BC
 primacy_delta,Primacy - Delta,https://primacy.ca/locations/delta/,Delta,BC
-pinnacle_crowfoot,Pinnacle Medical - Crowfoot,https://www.pinnaclemedicalcentres.com/locations/crowfoot,Calgary (NW),AB
-pinnacle_douglas_glen,Pinnacle Medical - Douglas Glen,https://www.pinnaclemedicalcentres.com/locations/douglas-glen,Calgary (SE),AB
+pinnacle_crowfoot,Pinnacle Medical - Crowfoot,https://www.pinnaclemedicalcentres.com/locations/crowfoot,Calgary,AB
+pinnacle_douglas_glen,Pinnacle Medical - Douglas Glen,https://www.pinnaclemedicalcentres.com/locations/douglas-glen,Calgary,AB
 pinnacle_high_river,Pinnacle Medical - High River,https://www.pinnaclemedicalcentres.com/locations/high-river,High River,AB
 pinnacle_okotoks,Pinnacle Medical - Okotoks,https://www.pinnaclemedicalcentres.com/locations/okotoks,Okotoks,AB
 pinnacle_strathmore,Pinnacle Medical - Strathmore,https://www.pinnaclemedicalcentres.com/locations/strathmore,Strathmore,AB
-pinnacle_beddington,Pinnacle Medical - Beddington,https://www.pinnaclemedicalcentres.com/locations/beddington,Calgary (NW),AB
-pinnacle_walden,Pinnacle Medical - Walden,https://www.pinnaclemedicalcentres.com/locations/walden,Calgary (SE),AB
-aspen_medical,Aspen Medical Clinic,https://aspenmedicalclinic.ca/,Calgary (SW),AB
-aspire_medical,Aspire Medical,https://www.aspiremedical.ca/,Calgary (NW),AB
-bowglen_medical,Bowglen Medical Centre,https://bowglenmedical.ca/,Calgary (NW),AB
-centre_street_medical,Centre Street North Medical,https://cfpcn.ca/clinic/centre-street-north-medical-clinic/,Calgary (NW),AB
-creekside_medical,Creekside Medical Clinic,https://creeksidemedical.ca/,Calgary (NW),AB
-dalbrent_medical,Dalbrent Medical Centre,https://dalbrentmedical.ca/,Calgary (NW),AB
-edgemont_medical,Edgemont Medical Centre,https://edgemontmedical.ca/,Calgary (NW),AB
-evanston_medical,Evanston Medical Clinic,https://evanstonmedical.ca/,Calgary (NW),AB
-foothills_primary_care,Foothills Primary Care,https://www.foothillspc.ca/,Calgary (NW),AB
-varsity_medical,Varsity Medical Clinic,https://varsitymedical.ca/,Calgary (NW),AB
-crowfoot_village,Crowfoot Village Family Practice,https://crowfootvillagefamilypractice.com/,Calgary (NW),AB
-4th_street_clinic,4th Street Clinic,https://cwcpcn.com/clinic/4th-street-clinic/,Calgary (SW),AB
-advanced_primary_care,Advanced Primary Care,https://advancedprimarycare.ca/,Calgary (NE),AB
-alpha_glen_medical,Alpha Glen Medical Clinic,https://alphaglenmedical.ca/,Calgary (SE),AB
-associate_clinic,Associate Clinic,https://www.associateclinic.com/,Calgary (Downtown),AB
-avenue_health,Avenue Health,https://avenuehealth.ca/,Calgary (SW),AB
-bow_trail_medical,Bow Trail Medical Clinic,https://bowtrailmedical.ca/,Calgary (SW),AB
-calgary_west_medical,Calgary West Medical Centre,https://calgarywestmedical.com/,Calgary (SW),AB
-carewell_coach_hill,Carewell Medical (Coach Hill),https://carewellmedical.ca/,Calgary (SW),AB
-chinook_medical,Chinook Medical Centre,https://chinookmedical.ca/,Calgary (SW),AB
-richmond_square_medical,Richmond Square Medical,https://rsmed.ca/,Calgary (SW),AB
-west_springs_medical,West Springs Medical,https://westspringsmedical.ca/,Calgary (SW),AB
-connaught_medical,Connaught Medical Clinic,https://connaughtmedical.ca/,Calgary (Beltline),AB
-17_ave_medical,17 Ave SE Medical Centre,https://mosaicpcn.ca/clinic/17-ave-se-medical-centre/,Calgary (SE),AB
-abbeydale_medical,Abbeydale Medical Clinic,https://abbeydalemedical.ca/,Calgary (NE),AB
-affinity_medical,Affinity Medical Clinic,https://affinitymedical.ca/,Calgary (NW),AB
-calgary_childrens,Calgary Children's Clinic,https://calgarychildrensclinic.ca/,Calgary (NE),AB
-east_hills_medical,East Hills Family Medical,https://easthillsmedical.ca/,Calgary (SE),AB
-family_care_medical,Family Care Medical Center,https://familycaremedical.ca/,Calgary (NE),AB
-forest_lawn_medical,Forest Lawn Medical Clinic,https://forestlawnmedical.ca/,Calgary (SE),AB
-genesis_medical,Genesis Medical Clinic,https://genesismedical.ca/,Calgary (NE),AB
-marlborough_medical,Marlborough Medical Clinic,https://marlboroughmedical.ca/,Calgary (NE),AB
-martindale_medical,Martindale Medical Clinic,https://martindalemedical.ca/,Calgary (NE),AB
-mayland_medical,Mayland Medical Centre,https://maylandmedical.ca/,Calgary (NE),AB
-medilink_walkin,Medilink Walk-In,https://medilink.ca/,Calgary (SE),AB
-mosaic_sunridge,Mosaic Sunridge Mall Clinic,https://mosaicpcn.ca/mosaic-pcn/mosaic-clinics/,Calgary (NE),AB
-oasis_medical,Oasis Medical Centre,https://oasismedical.ca/,Calgary (NE),AB
-smart_clinic,Smart Clinic,https://smartclinic.ca/,Calgary (N),AB
-sunridge_teaching,Sunridge Family Medicine Teaching,https://cumming.ucalgary.ca/departments/family-medicine/sunridge,Calgary (NE),AB
-westwinds_medical,Westwinds Medical Clinic,https://westwindsmedical.ca/,Calgary (NE),AB
-now_medical,Now Medical Clinic,https://nowmedical.ca/accepting-new-patients,Calgary (NE),AB
-myhealth_clinic,MyHealth Clinic (Bowness),https://www.myhealthclinic.ca/,Calgary (NW),AB
-imagine_health,Imagine Health Centres,https://imaginehealthcentres.ca/calgary-clinics/,Calgary (South),AB
-oasis_medical_bridgeland,Oasis Medical (Bridgeland),https://oasismedical.ca/,Calgary (NE),AB
-mission_medical,Mission Medical Clinic,https://missionmedical.ca/,Calgary (SW),AB
-sage_hill_medical,Sage Hill Medical,https://sagehillmedical.ca/,Calgary (NW),AB
-beacon_hill_medical,Beacon Hill Medical,https://beaconhillmedical.ca/,Calgary (NW),AB
-harvest_hills_medical,Harvest Hills Medical,https://harvesthillsmedical.ca/,Calgary (N),AB
+pinnacle_beddington,Pinnacle Medical - Beddington,https://www.pinnaclemedicalcentres.com/locations/beddington,Calgary,AB
+pinnacle_walden,Pinnacle Medical - Walden,https://www.pinnaclemedicalcentres.com/locations/walden,Calgary,AB
+aspen_medical,Aspen Medical Clinic,https://aspenmedicalclinic.ca/,Calgary,AB
+aspire_medical,Aspire Medical,https://www.aspiremedical.ca/,Calgary,AB
+bowglen_medical,Bowglen Medical Centre,https://bowglenmedical.ca/,Calgary,AB
+centre_street_medical,Centre Street North Medical,https://cfpcn.ca/clinic/centre-street-north-medical-clinic/,Calgary,AB
+creekside_medical,Creekside Medical Clinic,https://creeksidemedical.ca/,Calgary,AB
+dalbrent_medical,Dalbrent Medical Centre,https://dalbrentmedical.ca/,Calgary,AB
+edgemont_medical,Edgemont Medical Centre,https://edgemontmedical.ca/,Calgary,AB
+evanston_medical,Evanston Medical Clinic,https://evanstonmedical.ca/,Calgary,AB
+foothills_primary_care,Foothills Primary Care,https://www.foothillspc.ca/,Calgary,AB
+varsity_medical,Varsity Medical Clinic,https://varsitymedical.ca/,Calgary,AB
+crowfoot_village,Crowfoot Village Family Practice,https://crowfootvillagefamilypractice.com/,Calgary,AB
+4th_street_clinic,4th Street Clinic,https://cwcpcn.com/clinic/4th-street-clinic/,Calgary,AB
+advanced_primary_care,Advanced Primary Care,https://advancedprimarycare.ca/,Calgary,AB
+alpha_glen_medical,Alpha Glen Medical Clinic,https://alphaglenmedical.ca/,Calgary,AB
+associate_clinic,Associate Clinic,https://www.associateclinic.com/,Calgary,AB
+avenue_health,Avenue Health,https://avenuehealth.ca/,Calgary,AB
+bow_trail_medical,Bow Trail Medical Clinic,https://bowtrailmedical.ca/,Calgary,AB
+calgary_west_medical,Calgary West Medical Centre,https://calgarywestmedical.com/,Calgary,AB
+carewell_coach_hill,Carewell Medical (Coach Hill),https://carewellmedical.ca/,Calgary,AB
+chinook_medical,Chinook Medical Centre,https://chinookmedical.ca/,Calgary,AB
+richmond_square_medical,Richmond Square Medical,https://rsmed.ca/,Calgary,AB
+west_springs_medical,West Springs Medical,https://westspringsmedical.ca/,Calgary,AB
+connaught_medical,Connaught Medical Clinic,https://connaughtmedical.ca/,Calgary,AB
+17_ave_medical,17 Ave SE Medical Centre,https://mosaicpcn.ca/clinic/17-ave-se-medical-centre/,Calgary,AB
+abbeydale_medical,Abbeydale Medical Clinic,https://abbeydalemedical.ca/,Calgary,AB
+affinity_medical,Affinity Medical Clinic,https://affinitymedical.ca/,Calgary,AB
+calgary_childrens,Calgary Children's Clinic,https://calgarychildrensclinic.ca/,Calgary,AB
+east_hills_medical,East Hills Family Medical,https://easthillsmedical.ca/,Calgary,AB
+family_care_medical,Family Care Medical Center,https://familycaremedical.ca/,Calgary,AB
+forest_lawn_medical,Forest Lawn Medical Clinic,https://forestlawnmedical.ca/,Calgary,AB
+genesis_medical,Genesis Medical Clinic,https://genesismedical.ca/,Calgary,AB
+marlborough_medical,Marlborough Medical Clinic,https://marlboroughmedical.ca/,Calgary,AB
+martindale_medical,Martindale Medical Clinic,https://martindalemedical.ca/,Calgary,AB
+mayland_medical,Mayland Medical Centre,https://maylandmedical.ca/,Calgary,AB
+medilink_walkin,Medilink Walk-In,https://medilink.ca/,Calgary,AB
+mosaic_sunridge,Mosaic Sunridge Mall Clinic,https://mosaicpcn.ca/mosaic-pcn/mosaic-clinics/,Calgary,AB
+oasis_medical,Oasis Medical Centre,https://oasismedical.ca/,Calgary,AB
+smart_clinic,Smart Clinic,https://smartclinic.ca/,Calgary,AB
+sunridge_teaching,Sunridge Family Medicine Teaching,https://cumming.ucalgary.ca/departments/family-medicine/sunridge,Calgary,AB
+westwinds_medical,Westwinds Medical Clinic,https://westwindsmedical.ca/,Calgary,AB
+now_medical,Now Medical Clinic,https://nowmedical.ca/accepting-new-patients,Calgary,AB
+myhealth_clinic,MyHealth Clinic (Bowness),https://www.myhealthclinic.ca/,Calgary,AB
+imagine_health,Imagine Health Centres,https://imaginehealthcentres.ca/calgary-clinics/,Calgary,AB
+oasis_medical_bridgeland,Oasis Medical (Bridgeland),https://oasismedical.ca/,Calgary,AB
+mission_medical,Mission Medical Clinic,https://missionmedical.ca/,Calgary,AB
+sage_hill_medical,Sage Hill Medical,https://sagehillmedical.ca/,Calgary,AB
+beacon_hill_medical,Beacon Hill Medical,https://beaconhillmedical.ca/,Calgary,AB
+harvest_hills_medical,Harvest Hills Medical,https://harvesthillsmedical.ca/,Calgary,AB
 medicentres_calgary,Medicentres (Multiple),https://www.medicentres.com/clinics/calgary/,Calgary,AB
-primary_plus_medical,Primary Plus Medical,https://primaryplusmedical.ca/,Calgary (NE),AB
-calgary_well_woman,Calgary Well Woman Clinic,https://cwcpcn.com/clinic/calgary-well-woman-clinic/,Calgary (SE),AB
-calgary_foot_care,Calgary Foot Care Nurses,https://calgaryfootcare.ca/,Calgary (SW),AB
-breast_cancer_supportive,Breast Cancer Supportive Care,https://breastcancersupportivecare.com/,Calgary (SW),AB
-pediatric_care_calgary,Pediatric Care Calgary,https://pediatriccarecalgary.ca/,Calgary (SW),AB
+primary_plus_medical,Primary Plus Medical,https://primaryplusmedical.ca/,Calgary,AB
+calgary_well_woman,Calgary Well Woman Clinic,https://cwcpcn.com/clinic/calgary-well-woman-clinic/,Calgary,AB
+calgary_foot_care,Calgary Foot Care Nurses,https://calgaryfootcare.ca/,Calgary,AB
+breast_cancer_supportive,Breast Cancer Supportive Care,https://breastcancersupportivecare.com/,Calgary,AB
+pediatric_care_calgary,Pediatric Care Calgary,https://pediatriccarecalgary.ca/,Calgary,AB
 adelaide_health_clinic,Adelaide Health Clinic,https://adelaidehealth.com/,Toronto,ON
 bamburgh_medical,Bamburgh Medical,https://www.torontocentralhealthline.ca/displayService.aspx?id=10075,Toronto,ON
 bayside_medical_centre,Bayside Medical Centre,https://www.torontocentralhealthline.ca/displayService.aspx?id=10075,Toronto,ON

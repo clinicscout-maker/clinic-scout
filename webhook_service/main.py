@@ -58,69 +58,124 @@ def kofi_handler(request: Request):
         return jsonify({'error': 'Invalid JSON'}), 400
 
     # Verify token
-    if data.get('verification_token') != KOFI_VERIFICATION_TOKEN:
+    received_token = data.get('verification_token')
+    if received_token != KOFI_VERIFICATION_TOKEN:
+        print(f"❌ Token mismatch: received={received_token}, expected={KOFI_VERIFICATION_TOKEN}")
         return jsonify({'error': 'Invalid verification token'}), 403
-
+    
+    print(f"✅ Token verified successfully")
+    
+    # Extract payment details
     email = data.get('email')
+    amount = data.get('amount')
+    timestamp = data.get('timestamp')
+    payment_type = data.get('type')  # Donation, Subscription, Commission, or Shop Order
+    is_subscription = data.get('is_subscription_payment', False)
+    is_first_subscription = data.get('is_first_subscription_payment', False)
+    tier_name = data.get('tier_name')
+    message_id = data.get('message_id')
+    
+    print(f"📦 Payment Details:")
+    print(f"   Type: {payment_type}")
+    print(f"   Email: {email}")
+    print(f"   Amount: ${amount}")
+    print(f"   Subscription: {is_subscription}")
+    print(f"   First Subscription: {is_first_subscription}")
+    print(f"   Tier: {tier_name}")
+    print(f"   Message ID: {message_id}")
+    
     if not email:
+        print(f"❌ Missing email in payment data")
         return jsonify({'error': 'Missing email'}), 400
         
     # Sanitize email
     email = email.lower().strip()
     
-    print(f"🔍 Searching for user with email: {email}")
-
-    amount = data.get('amount')
-    timestamp = data.get('timestamp')
-    is_subscription = data.get('is_subscription_payment', False)
-
     # Find user by email in Firestore
+    print(f"🔍 Searching for user with email: {email}")
     users_ref = db.collection('users')
     query = users_ref.where('email', '==', email).limit(1)
-    docs = list(query.stream())
-    if not docs:
-        # No matching user – still return 200 so Ko‑fi sees success
-        return jsonify({'status': 'success', 'message': 'User not found'}), 200
-
+    
+    # Debug: Try to get all results
+    try:
+        docs = list(query.stream())
+        print(f"📊 Query returned {len(docs)} result(s)")
+        
+        if not docs:
+            # Debug: Try to list all users to see if collection is accessible
+            all_users = list(users_ref.limit(5).stream())
+            print(f"📊 Total users in collection (sample): {len(all_users)}")
+            if all_users:
+                sample_emails = [u.to_dict().get('email', 'NO_EMAIL') for u in all_users]
+                print(f"📊 Sample emails: {sample_emails}")
+            
+            # No matching user – still return 200 so Ko-fi doesn't retry
+            print(f"⚠️  User not found for email: {email}")
+            return jsonify({'status': 'success', 'message': 'User not found'}), 200
+    except Exception as e:
+        print(f"❌ Query error: {e}")
+        return jsonify({'error': 'Database query failed'}), 500
+    
     user_doc = docs[0]
     user_id = user_doc.id
     user_ref = users_ref.document(user_id)
     
+    print(f"✅ Found user: {user_id}")
+    
     # Log transaction to Firestore BEFORE updating user
     try:
-        db.collection('transactions').add({
+        transaction_data = {
             'userId': user_id,
             'email': email,
             'amount': amount,
             'timestamp': timestamp,
+            'paymentType': payment_type,
             'isSubscription': is_subscription,
+            'isFirstSubscription': is_first_subscription,
+            'tierName': tier_name,
+            'messageId': message_id,
             'rawPayload': data,
             'processedAt': firestore.SERVER_TIMESTAMP
-        })
+        }
+        db.collection('transactions').add(transaction_data)
         print(f'✅ Transaction logged for user {user_id}')
     except Exception as e:
         print(f'❌ Failed to log transaction: {e}')
     
     # Update user premium status
-    user_ref.update({
-        'isPremium': True,
-        'premiumSince': firestore.SERVER_TIMESTAMP,
-        'lastPaymentAmount': amount,
-        'lastPaymentDate': timestamp,
-        'isSubscription': is_subscription,
-    })
-
+    try:
+        update_data = {
+            'isPremium': True,
+            'premiumSince': firestore.SERVER_TIMESTAMP,
+            'lastPaymentAmount': amount,
+            'lastPaymentDate': timestamp,
+            'isSubscription': is_subscription,
+        }
+        
+        if tier_name:
+            update_data['tierName'] = tier_name
+        
+        user_ref.update(update_data)
+        print(f'✅ User {user_id} upgraded to premium')
+    except Exception as e:
+        print(f'❌ Failed to update user: {e}')
+        return jsonify({'error': 'Failed to update user'}), 500
+    
     # Send SMS if Twilio is configured and user has a phone number
     user_data = user_doc.to_dict()
     phone = user_data.get('phoneNumber')
+    
     if phone and TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN:
         try:
+            print(f'📱 Sending welcome SMS to {phone}')
             client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
             message = client.messages.create(
                 body='🎉 You are now a premium Clinic Scout user! You will receive instant SMS alerts.',
                 from_=TWILIO_PHONE_NUMBER,
                 to=phone,
             )
+            
+            print(f'✅ SMS sent: {message.sid}')
             
             # Log notification to Firestore
             try:
@@ -137,6 +192,13 @@ def kofi_handler(request: Request):
                 
         except Exception as e:
             # Log but do not fail the webhook
-            print(f'SMS send error: {e}')
-
+            print(f'❌ SMS send error: {e}')
+    else:
+        if not phone:
+            print(f'ℹ️  No phone number for user {user_id}')
+        else:
+            print(f'ℹ️  Twilio not configured, skipping SMS')
+    
+    # Return 200 status code as required by Ko-fi API
+    print(f'✅ Payment processed successfully for {email}')
     return jsonify({'status': 'success', 'message': 'Payment processed'}), 200
