@@ -5,6 +5,7 @@ import { collection, onSnapshot, query, orderBy, doc, updateDoc, increment } fro
 import { db } from "@/lib/firebase";
 import { MapPin, Phone, Search, Clock, CheckCircle2, XCircle, AlertCircle, Filter, ThumbsUp, ThumbsDown, Loader2, Lock } from "lucide-react";
 import clsx from "clsx";
+import { normalizeLanguage, sortLanguages, sortAreas } from "@/lib/constants";
 
 interface Clinic {
     id: string;
@@ -18,6 +19,7 @@ interface Clinic {
     success_count?: number;
     failure_count?: number;
     languages?: string[];
+    province: string;
 }
 
 const PROVINCES = [
@@ -26,13 +28,6 @@ const PROVINCES = [
     { code: "AB", name: "Alberta" },
 ];
 
-const LOCATIONS: Record<string, string[]> = {
-    "ON": ["Toronto", "Mississauga", "Brampton", "Markham", "Richmond Hill", "Vaughan", "Oakville", "Scarborough", "North York", "Etobicoke"],
-    "BC": ["Vancouver", "Burnaby", "Richmond", "Surrey", "North Vancouver", "West Vancouver", "Coquitlam", "Delta"],
-    "AB": ["Calgary", "Edmonton", "Red Deer", "Lethbridge"],
-};
-
-const LANGUAGES = ["English", "French", "Mandarin", "Cantonese", "Punjabi", "Hindi", "Spanish", "Arabic"];
 
 export default function ClinicList({ paymentUrl, isPremium = false, onLastCheckedUpdate }: { paymentUrl: string, isPremium?: boolean, onLastCheckedUpdate?: (date: Date) => void }) {
     const [clinics, setClinics] = useState<Clinic[]>([]);
@@ -43,6 +38,8 @@ export default function ClinicList({ paymentUrl, isPremium = false, onLastChecke
     const [locationFilter, setLocationFilter] = useState("ALL");
     const [selectedLanguage, setSelectedLanguage] = useState("ALL");
     const [userVotes, setUserVotes] = useState<Record<string, 'success' | 'failure'>>({});
+    const [availableLanguages, setAvailableLanguages] = useState<string[]>([]);
+    const [availableLocations, setAvailableLocations] = useState<Record<string, string[]>>({});
 
     useEffect(() => {
         const storedVotes = localStorage.getItem("clinic_votes");
@@ -83,6 +80,13 @@ export default function ClinicList({ paymentUrl, isPremium = false, onLastChecke
                     languages = languages.split(',').map(l => l.trim());
                 }
 
+                // Normalize languages (Title Case & Grouping)
+                if (Array.isArray(languages)) {
+                    languages = languages.map(lang => normalizeLanguage(lang));
+                    // Deduplicate
+                    languages = Array.from(new Set(languages));
+                }
+
                 return {
                     id: doc.id,
                     ...data,
@@ -106,6 +110,41 @@ export default function ClinicList({ paymentUrl, isPremium = false, onLastChecke
             }
 
             setClinics(validClinics);
+
+            // Derive unique languages from fetched clinics (use ALL clinics, not just valid ones)
+            const languagesSet = new Set<string>();
+            clinicData.forEach(clinic => {
+                if (Array.isArray(clinic.languages)) {
+                    clinic.languages.forEach(lang => {
+                        if (lang) languagesSet.add(lang);
+                    });
+                }
+            });
+
+            // Custom Sort for Dropdown
+            const sortedLanguages = sortLanguages(Array.from(languagesSet));
+
+            setAvailableLanguages(sortedLanguages);
+
+            // Derive unique locations by province (use ALL clinics)
+            const locationsByProvince: Record<string, Set<string>> = {
+                "ON": new Set(),
+                "BC": new Set(),
+                "AB": new Set(),
+            };
+
+            clinicData.forEach(clinic => {
+                if (clinic.district && clinic.province && locationsByProvince[clinic.province]) {
+                    locationsByProvince[clinic.province].add(clinic.district);
+                }
+            });
+
+            const locationsObject: Record<string, string[]> = {};
+            Object.keys(locationsByProvince).forEach((prov) => {
+                locationsObject[prov] = sortAreas(Array.from(locationsByProvince[prov]), prov);
+            });
+            setAvailableLocations(locationsObject);
+
             setLoading(false);
         }, (error) => {
             clearTimeout(timeoutId);
@@ -127,11 +166,12 @@ export default function ClinicList({ paymentUrl, isPremium = false, onLastChecke
         }
 
         // Filter by Province
+        // Filter by Province
         if (selectedProvince !== "ALL") {
-            const provinceLocations = LOCATIONS[selectedProvince] || [];
+            const provinceLocations = availableLocations[selectedProvince] || [];
             // Check if clinic's district/city matches any in the province list
             // Or if we have a province field (assuming we might not, so we use the list)
-            result = result.filter(c => provinceLocations.some(loc => c.district.includes(loc)));
+            result = result.filter(c => provinceLocations.includes(c.district));
         }
 
         // Filter by Location
@@ -162,7 +202,7 @@ export default function ClinicList({ paymentUrl, isPremium = false, onLastChecke
         });
 
         setFilteredClinics(result);
-    }, [clinics, filterStatus, selectedProvince, locationFilter]);
+    }, [clinics, filterStatus, selectedProvince, locationFilter, selectedLanguage]);
 
     const handleVote = async (clinicId: string, type: 'success' | 'failure') => {
         if (userVotes[clinicId]) return; // Prevent duplicate voting
@@ -229,22 +269,25 @@ export default function ClinicList({ paymentUrl, isPremium = false, onLastChecke
                         className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-medium text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <option value="ALL">All Locations</option>
-                        {selectedProvince !== "ALL" && LOCATIONS[selectedProvince]?.map(location => (
+                        {selectedProvince !== "ALL" && availableLocations[selectedProvince]?.map(location => (
                             <option key={location} value={location}>{location}</option>
                         ))}
                     </select>
 
                     {/* Language Filter */}
-                    <select
-                        value={selectedLanguage}
-                        onChange={(e) => setSelectedLanguage(e.target.value)}
-                        className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-medium text-slate-600"
-                    >
-                        <option value="ALL">All Languages</option>
-                        {LANGUAGES.map(lang => (
-                            <option key={lang} value={lang}>{lang}</option>
-                        ))}
-                    </select>
+                    <div className="relative">
+                        <select
+                            value={selectedLanguage}
+                            onChange={(e) => setSelectedLanguage(e.target.value)}
+                            className="appearance-none w-full pl-10 pr-8 py-2 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                        >
+                            <option value="ALL">All Languages</option>
+                            {availableLanguages.map((lang) => (
+                                <option key={lang} value={lang}>{lang}</option>
+                            ))}
+                        </select>
+                        <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    </div>
                 </div>
 
                 {/* Status Filter Tabs */}

@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import { doc, getDoc, setDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { User } from "firebase/auth";
-import { Save, Loader2, X, Check, Mail, ShieldCheck } from "lucide-react";
+import { MapPin, Loader2, X, Check, Mail, ShieldCheck, Save } from "lucide-react";
 import clsx from "clsx";
+import { normalizeLanguage, sortLanguages, sortAreas } from "@/lib/constants";
 
 const PROVINCES = [
     { code: "ON", name: "Ontario" },
@@ -67,6 +68,7 @@ export default function PreferencesForm({ user, mode = 'setup', onClose, onCompl
     const [availableLanguages, setAvailableLanguages] = useState<string[]>([]);
     const [loadingLanguages, setLoadingLanguages] = useState(true);
     const [showAllAreas, setShowAllAreas] = useState(false); // For compact mode on mobile
+    const [showAllLanguages, setShowAllLanguages] = useState(false); // For compact mode on mobile
 
     useEffect(() => {
         const fetchPreferences = async () => {
@@ -85,70 +87,35 @@ export default function PreferencesForm({ user, mode = 'setup', onClose, onCompl
         fetchPreferences();
     }, [user]);
 
-    // Fetch available areas from Firebase clinics collection
+    // Fetch available areas and languages from Firebase clinics collection
     useEffect(() => {
-        const fetchAvailableAreas = async () => {
+        const fetchData = async () => {
             setLoadingAreas(true);
-            try {
-                const clinicsRef = collection(db, "clinics");
-                const clinicsSnap = await getDocs(clinicsRef);
-
-                // Group unique districts by province
-                const areasByProvince: Record<string, Set<string>> = {
-                    "ON": new Set(),
-                    "BC": new Set(),
-                    "AB": new Set(),
-                };
-
-                clinicsSnap.forEach((doc) => {
-                    const data = doc.data();
-                    const district = data.district;
-                    const province = data.province;
-
-                    if (district && province && areasByProvince[province]) {
-                        // Add district to the appropriate province
-                        areasByProvince[province].add(district);
-                    }
-                });
-
-                // Convert Sets to sorted arrays
-                const areasObject: Record<string, string[]> = {};
-                Object.keys(areasByProvince).forEach((prov) => {
-                    areasObject[prov] = Array.from(areasByProvince[prov]).sort();
-                });
-
-                setAvailableAreas(areasObject);
-            } catch (error) {
-                console.error("Error fetching areas:", error);
-                // Fallback to empty arrays if fetch fails
-                setAvailableAreas({
-                    "ON": [],
-                    "BC": [],
-                    "AB": [],
-                });
-            } finally {
-                setLoadingAreas(false);
-            }
-        };
-
-        fetchAvailableAreas();
-    }, []);
-
-    // Fetch available languages from Firebase clinics collection
-    useEffect(() => {
-        const fetchAvailableLanguages = async () => {
             setLoadingLanguages(true);
             try {
                 const clinicsRef = collection(db, "clinics");
                 const clinicsSnap = await getDocs(clinicsRef);
 
-                // Collect unique languages
+                // Data structures for processing
+                const areasByProvince: Record<string, Set<string>> = {
+                    "ON": new Set(),
+                    "BC": new Set(),
+                    "AB": new Set(),
+                };
                 const languagesSet = new Set<string>();
 
                 clinicsSnap.forEach((doc) => {
                     const data = doc.data();
-                    const languages = data.languages;
 
+                    // Process Areas
+                    const district = data.district;
+                    const province = data.province;
+                    if (district && province && areasByProvince[province]) {
+                        areasByProvince[province].add(district);
+                    }
+
+                    // Process Languages
+                    const languages = data.languages;
                     if (Array.isArray(languages)) {
                         languages.forEach((lang: string) => {
                             if (lang) languagesSet.add(lang);
@@ -156,19 +123,37 @@ export default function PreferencesForm({ user, mode = 'setup', onClose, onCompl
                     }
                 });
 
-                // Convert Set to sorted array
-                const languagesArray = Array.from(languagesSet).sort();
+                // Set Areas
+                const areasObject: Record<string, string[]> = {};
+                Object.keys(areasByProvince).forEach((prov) => {
+                    areasObject[prov] = sortAreas(Array.from(areasByProvince[prov]), prov);
+                });
+                setAvailableAreas(areasObject);
+
+                // Set Languages
+                // 1. Normalize (Title Case) and Deduplicate
+                const normalizedLanguages = new Set<string>();
+                languagesSet.forEach(lang => {
+                    const normalized = normalizeLanguage(lang);
+                    if (normalized) normalizedLanguages.add(normalized);
+                });
+
+                // 2. Custom Sort
+                const languagesArray = sortLanguages(Array.from(normalizedLanguages));
+
                 setAvailableLanguages(languagesArray);
+
             } catch (error) {
-                console.error("Error fetching languages:", error);
-                // Fallback to empty array if fetch fails
+                console.error("Error fetching data:", error);
+                setAvailableAreas({ "ON": [], "BC": [], "AB": [] });
                 setAvailableLanguages([]);
             } finally {
+                setLoadingAreas(false);
                 setLoadingLanguages(false);
             }
         };
 
-        fetchAvailableLanguages();
+        fetchData();
     }, []);
 
     const toggleArea = (area: string) => {
@@ -456,36 +441,55 @@ export default function PreferencesForm({ user, mode = 'setup', onClose, onCompl
                     )}
                 </div>
 
-                {/* Language Selector */}
-                <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Preferred Languages</label>
+                {/* Language Selector with Compact Mode */}
+                <div className="space-y-2">
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-2">
+                        Preferred Languages {selectedLanguages.length > 0 && `(${selectedLanguages.length} selected)`}
+                    </label>
                     {loadingLanguages ? (
                         <div className="flex items-center justify-center py-8">
                             <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
                             <span className="ml-2 text-sm text-slate-500">Loading languages...</span>
                         </div>
                     ) : availableLanguages.length > 0 ? (
-                        <div className="flex flex-wrap gap-2">
-                            {availableLanguages.map((lang) => (
+                        <div className="space-y-3">
+                            <div className="flex flex-wrap gap-2">
+                                {(showAllLanguages
+                                    ? availableLanguages
+                                    : availableLanguages.slice(0, 6)
+                                ).map((lang) => (
+                                    <button
+                                        key={lang}
+                                        type="button"
+                                        onClick={() => toggleLanguage(lang)}
+                                        className={clsx(
+                                            "px-3 py-1.5 rounded-full text-xs font-bold transition-all border",
+                                            selectedLanguages.includes(lang)
+                                                ? "bg-blue-50 text-blue-700 border-blue-200"
+                                                : "bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100"
+                                        )}
+                                    >
+                                        {lang}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Show More/Less Toggle */}
+                            {availableLanguages.length > 6 && (
                                 <button
-                                    key={lang}
                                     type="button"
-                                    onClick={() => toggleLanguage(lang)}
-                                    className={clsx(
-                                        "px-3 py-1.5 rounded-full text-xs font-bold transition-all border",
-                                        selectedLanguages.includes(lang)
-                                            ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                                            : "bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100"
-                                    )}
+                                    onClick={() => setShowAllLanguages(!showAllLanguages)}
+                                    className="text-xs font-medium text-blue-600 hover:text-blue-700 transition-colors flex items-center gap-1"
                                 >
-                                    {lang}
+                                    {showAllLanguages
+                                        ? "− Show Less"
+                                        : `+ Show All (${availableLanguages.length})`
+                                    }
                                 </button>
-                            ))}
+                            )}
                         </div>
                     ) : (
-                        <p className="text-sm text-slate-500 py-4">
-                            No languages available yet.
-                        </p>
+                        <p className="text-sm text-slate-500 py-4">No languages found.</p>
                     )}
                 </div>
             </div>
