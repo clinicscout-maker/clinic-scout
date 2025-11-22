@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { User, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
 import { doc, getDoc, setDoc, collection, getDocs, query, where, limit, onSnapshot } from "firebase/firestore";
 import { db, auth } from "@/lib/firebase";
@@ -427,13 +428,13 @@ export default function Home() {
                             Clinic Scout is an independent technology service not affiliated with any government or medical body. All data is publicly available.
                         </p>
                         <div className="flex items-center justify-center gap-6 text-xs">
-                            <a href="#" className="text-slate-400 hover:text-slate-600 underline transition-colors">
+                            <Link href="/terms" className="text-slate-400 hover:text-slate-600 underline transition-colors">
                                 Terms of Service
-                            </a>
+                            </Link>
                             <span className="text-slate-300">•</span>
-                            <a href="#" className="text-slate-400 hover:text-slate-600 underline transition-colors">
+                            <Link href="/privacy" className="text-slate-400 hover:text-slate-600 underline transition-colors">
                                 Privacy Policy
-                            </a>
+                            </Link>
                         </div>
                         <p className="text-[10px] text-center text-slate-400">
                             © {new Date().getFullYear()} Clinic Scout. All rights reserved.
