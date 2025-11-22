@@ -194,11 +194,11 @@ export default function Home() {
                 </div>
             </header>
 
-            <main className="max-w-7xl mx-auto px-4 md:px-8 pt-6 pb-8 md:py-12">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            <main className="max-w-7xl mx-auto px-4 md:px-8 pt-24 pb-8 md:py-12 flex flex-col justify-start">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start w-full">
 
                     {/* LEFT COLUMN: Action Zone (Sticky) */}
-                    <div className="lg:col-span-5 lg:sticky lg:top-28 space-y-8">
+                    <div className="lg:col-span-5 lg:sticky lg:top-28 space-y-8 order-1">
 
                         {/* Hero Text (Only show if not logged in) */}
                         {!user && (
@@ -413,7 +413,7 @@ export default function Home() {
                     </div>
 
                     {/* RIGHT COLUMN: Proof Zone (Scrollable) */}
-                    <div className="lg:col-span-7 space-y-6">
+                    <div className="lg:col-span-7 space-y-6 order-2">
 
                         {/* Live Clinic List */}
                         <div className="bg-white/60 backdrop-blur-md rounded-3xl shadow-xl border border-white/50 p-6">
