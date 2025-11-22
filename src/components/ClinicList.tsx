@@ -17,6 +17,7 @@ interface Clinic {
     updatedAt: any;
     success_count?: number;
     failure_count?: number;
+    languages?: string[];
 }
 
 const PROVINCES = [
@@ -31,6 +32,8 @@ const LOCATIONS: Record<string, string[]> = {
     "AB": ["Calgary", "Edmonton", "Red Deer", "Lethbridge"],
 };
 
+const LANGUAGES = ["English", "French", "Mandarin", "Cantonese", "Punjabi", "Hindi", "Spanish", "Arabic"];
+
 export default function ClinicList({ paymentUrl, isPremium = false }: { paymentUrl: string, isPremium?: boolean }) {
     const [clinics, setClinics] = useState<Clinic[]>([]);
     const [filteredClinics, setFilteredClinics] = useState<Clinic[]>([]);
@@ -38,6 +41,7 @@ export default function ClinicList({ paymentUrl, isPremium = false }: { paymentU
     const [filterStatus, setFilterStatus] = useState<"ALL" | "OPEN" | "WAITLIST">("ALL");
     const [selectedProvince, setSelectedProvince] = useState("ALL");
     const [locationFilter, setLocationFilter] = useState("ALL");
+    const [selectedLanguage, setSelectedLanguage] = useState("ALL");
     const [userVotes, setUserVotes] = useState<Record<string, 'success' | 'failure'>>({});
 
     useEffect(() => {
@@ -67,10 +71,24 @@ export default function ClinicList({ paymentUrl, isPremium = false }: { paymentU
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
             clearTimeout(timeoutId);
-            const clinicData = snapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data(),
-            })) as Clinic[];
+            const clinicData = snapshot.docs.map((doc) => {
+                const data = doc.data();
+                let languages = data.languages;
+
+                // Default to English if missing, empty, or "N/A"
+                if (!languages || languages === "N/A" || (Array.isArray(languages) && languages.length === 0)) {
+                    languages = ["English"];
+                } else if (typeof languages === 'string') {
+                    // Handle case where it might be a comma-separated string
+                    languages = languages.split(',').map(l => l.trim());
+                }
+
+                return {
+                    id: doc.id,
+                    ...data,
+                    languages,
+                };
+            }) as Clinic[];
 
             // Filter out ERROR and UNCERTAIN
             const validClinics = clinicData.filter(c => c.status !== "ERROR" && c.status !== "UNCERTAIN");
@@ -107,6 +125,11 @@ export default function ClinicList({ paymentUrl, isPremium = false }: { paymentU
         // Filter by Location
         if (locationFilter !== "ALL") {
             result = result.filter(c => c.district.includes(locationFilter));
+        }
+
+        // Filter by Language
+        if (selectedLanguage !== "ALL") {
+            result = result.filter(c => c.languages?.includes(selectedLanguage));
         }
 
         // Sorting Logic: Status Priority -> Social Proof (Net Score)
@@ -196,6 +219,18 @@ export default function ClinicList({ paymentUrl, isPremium = false }: { paymentU
                         <option value="ALL">All Locations</option>
                         {selectedProvince !== "ALL" && LOCATIONS[selectedProvince]?.map(location => (
                             <option key={location} value={location}>{location}</option>
+                        ))}
+                    </select>
+
+                    {/* Language Filter */}
+                    <select
+                        value={selectedLanguage}
+                        onChange={(e) => setSelectedLanguage(e.target.value)}
+                        className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-medium text-slate-600"
+                    >
+                        <option value="ALL">All Languages</option>
+                        {LANGUAGES.map(lang => (
+                            <option key={lang} value={lang}>{lang}</option>
                         ))}
                     </select>
                 </div>

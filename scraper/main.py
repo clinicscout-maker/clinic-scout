@@ -183,7 +183,8 @@ async def update_clinic_in_firestore(url, data):
             "url": url,
             "vacancy": data.get('remaining_vacancy', 'N/A'),
             "languages": data.get('languages', 'N/A'),
-            "evidence": data.get('evidence', 'N/A')
+            "evidence": data.get('evidence', 'N/A'),
+            "province": data.get('province', 'N/A')
         }
         
         doc_ref.set(doc_data, merge=True)
@@ -195,7 +196,7 @@ async def update_clinic_in_firestore(url, data):
 async def main():
     # Read target URLs from CSV
     targets = [] # List of dicts {url, id}
-    seed_file = "clinic_seed.csv"
+    seed_file = os.environ.get("SEED_FILE", "clinic_seed.csv")
     
     try:
         import csv
@@ -205,7 +206,9 @@ async def main():
                 if row.get('url'):
                     targets.append({
                         'url': row['url'].strip(),
-                        'id': row.get('id', '').strip()
+                        'id': row.get('id', '').strip(),
+                        'city': row.get('city', '').strip(),
+                        'province': row.get('province', '').strip()
                     })
         print(f"Loaded {len(targets)} clinics from {seed_file}")
     except FileNotFoundError:
@@ -225,8 +228,12 @@ async def main():
             print(f"Analyzing content for {url}...")
             result = await analyze_clinic_status(text_content)
             
-            # Add ID to result for Firestore update
+            # Add ID and location from seed to result for Firestore update
             result['id'] = clinic_id
+            if target.get('city'):
+                result['district'] = target['city']
+            if target.get('province'):
+                result['province'] = target['province']
             
             results[url] = result
             status = result.get('status', 'UNKNOWN')

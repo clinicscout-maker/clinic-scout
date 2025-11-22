@@ -42,8 +42,14 @@ export default function Auth({ onLogin, paymentUrl, isPremium = false }: { onLog
         e.preventDefault();
         setLoading(true);
         try {
+            // Determine redirect URL
+            let redirectUrl = window.location.href;
+            if (window.location.hostname !== 'localhost' && !window.location.hostname.includes('127.0.0.1')) {
+                redirectUrl = "https://www.clinicscout.ca/";
+            }
+
             const actionCodeSettings = {
-                url: window.location.href, // Redirect back to current page
+                url: redirectUrl,
                 handleCodeInApp: true,
             };
 
@@ -146,8 +152,14 @@ export default function Auth({ onLogin, paymentUrl, isPremium = false }: { onLog
                         </div>
 
                         <div className="text-center mb-8">
-                            <h1 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">Get Instant Alerts</h1>
-                            <p className="text-slate-600 font-medium">Join 1,000+ locals tracking clinics.</p>
+                            <h1 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">
+                                {authMethod === "EMAIL" ? "Welcome Back" : "Get Instant Alerts"}
+                            </h1>
+                            <p className="text-slate-600 font-medium">
+                                {authMethod === "EMAIL"
+                                    ? "Enter the email to restore your premium access"
+                                    : "Join 1,000+ locals tracking clinics."}
+                            </p>
                         </div>
 
                         {authMethod === "PHONE" ? (
@@ -224,7 +236,7 @@ export default function Auth({ onLogin, paymentUrl, isPremium = false }: { onLog
                                             className="group relative w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-5 rounded-xl shadow-xl shadow-blue-600/20 transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 overflow-hidden"
                                         >
                                             <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer" />
-                                            <span className="text-lg">{loading ? "Sending Link..." : "Send Login Link"}</span>
+                                            <span className="text-lg">{loading ? "Sending Link..." : "Email Me a Magic Link ->"}</span>
                                             {!loading && <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />}
                                         </button>
                                     </>
