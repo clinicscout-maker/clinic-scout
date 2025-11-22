@@ -288,7 +288,7 @@ export default function PreferencesForm({ user, mode = 'setup', onClose, onCompl
                     ) : (
                         <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                                     <ShieldCheck className="w-5 h-5 text-green-600" />
                                 </div>
                                 <div>

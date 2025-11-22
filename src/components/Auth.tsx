@@ -72,7 +72,7 @@ export default function Auth({ onLogin }: { onLogin: (user: User) => void }) {
     };
 
     return (
-        <div className="w-full p-8">
+        <div className="w-full p-4 md:p-8">
             <div className="flex justify-center gap-4 mb-8">
                 <button
                     onClick={() => setAuthMethod("PHONE")}
@@ -189,7 +189,7 @@ export default function Auth({ onLogin }: { onLogin: (user: User) => void }) {
                                 className="group relative w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-5 rounded-xl shadow-xl shadow-blue-600/20 transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 overflow-hidden"
                             >
                                 <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer" />
-                                <span className="text-lg">{loading ? "Sending Link..." : "Log in to Dashboard"}</span>
+                                <span className="text-lg">{loading ? "Sending Link..." : "Email Me a Magic Link ->"}</span>
                                 {!loading && <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />}
                             </button>
                         </>

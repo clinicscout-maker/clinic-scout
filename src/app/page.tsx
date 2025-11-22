@@ -161,9 +161,9 @@ export default function Home() {
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
             {/* Sticky Header */}
             <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-slate-200 shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex items-center justify-between">
+                <div className="w-full px-4 md:px-8 py-4 flex items-center justify-between lg:max-w-7xl lg:mx-auto">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-teal-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
                             <Activity className="w-6 h-6 text-white" />
                         </div>
                         <div>
@@ -194,11 +194,11 @@ export default function Home() {
                 </div>
             </header>
 
-            <main className="max-w-7xl mx-auto px-4 md:px-8 pt-24 pb-8 md:py-12 flex flex-col justify-start">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start w-full">
+            <main className="w-full px-4 pt-6 pb-8 md:px-8 md:pt-12 lg:max-w-7xl lg:mx-auto">
+                <div className="grid gap-6 lg:gap-12 lg:grid-cols-12 w-full">
 
                     {/* LEFT COLUMN: Action Zone (Sticky) */}
-                    <div className="lg:col-span-5 lg:sticky lg:top-28 space-y-8 order-1">
+                    <div className="order-1 lg:col-span-5 lg:sticky lg:top-28 space-y-8">
 
                         {/* Hero Text (Only show if not logged in) */}
                         {!user && (
@@ -213,10 +213,10 @@ export default function Home() {
                                     </span>
                                 </div>
                                 <h1 className="text-4xl md:text-6xl font-black tracking-tight text-slate-900 leading-tight">
-                                    Find a Family Doctor <span className="text-blue-600">Fast</span>
+                                    Stop Searching. <span className="text-blue-600">Start Seeing a Doctor.</span>
                                 </h1>
                                 <p className="text-lg text-slate-600 leading-relaxed">
-                                    Stop refreshing websites. Our <span className="font-bold text-slate-900">AI agents</span> monitor 250+ clinics 24/7 and interpret waitlist status instantly, sending you an SMS the second a spot opens.
+                                    Don't Miss the Next Open Spot. Our <span className="font-bold text-slate-900">AI agents</span> monitor 500+ clinics 24/7 and interpret waitlist status instantly, sending you an SMS the second a spot opens.
                                 </p>
                             </div>
                         )}
@@ -413,7 +413,7 @@ export default function Home() {
                     </div>
 
                     {/* RIGHT COLUMN: Proof Zone (Scrollable) */}
-                    <div className="lg:col-span-7 space-y-6 order-2">
+                    <div className="order-2 lg:col-span-7 space-y-6">
 
                         {/* Live Clinic List */}
                         <div className="bg-white/60 backdrop-blur-md rounded-3xl shadow-xl border border-white/50 p-6">

@@ -119,10 +119,10 @@ export default function Home() {
                         {!user && (
                             <div className="space-y-6">
                                 <h1 className="text-4xl md:text-6xl font-black tracking-tight text-slate-900 leading-tight">
-                                    Find a Family Doctor <span className="text-blue-600">Fast</span>
+                                    Stop Searching <span className="text-blue-600">Start Seeing a Doctor.</span>
                                 </h1>
                                 <p className="text-lg text-slate-600 leading-relaxed">
-                                    Stop refreshing websites. We monitor every clinic 24/7 and send you an instant SMS the second a spot opens.
+                                    Don't Miss the Next Open Spot. We monitor every clinic 24/7 and send you an instant SMS the second a spot opens.
                                 </p>
                             </div>
                         )}
