@@ -116,7 +116,7 @@ git push -u origin main
 5. **Deploy**:
    - Click "Deploy"
    - Wait 2-3 minutes
-   - Get your production URL: `https://clinic-scout.vercel.app` (or similar)
+   - Get your production URL: `https://clinicscout.ca`
 
 ### Method 2: Vercel CLI
 
